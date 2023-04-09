@@ -150,3 +150,36 @@ cython_debug/
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
+
+#venv
+QA_datasetENV/
+.chroma/index/id_to_uuid_3c23af73-765a-4b04-9b70-defa8b99d8d7.pkl
+.chroma/index/index_3c23af73-765a-4b04-9b70-defa8b99d8d7.bin
+.chroma/index/index_metadata_3c23af73-765a-4b04-9b70-defa8b99d8d7.pkl
+.chroma/index/uuid_to_id_3c23af73-765a-4b04-9b70-defa8b99d8d7.pkl
+Talk-Sheet/share/jupyter/nbextensions/pydeck/extensionRequires.js
+Talk-Sheet/Scripts/watchmedo.exe
+Talk-Sheet/Scripts/streamlit.exe
+Talk-Sheet/Scripts/streamlit.cmd
+Talk-Sheet/Scripts/pythonw.exe
+Talk-Sheet/Scripts/python.exe
+Talk-Sheet/Scripts/pygmentize.exe
+Talk-Sheet/Scripts/publish.py
+Talk-Sheet/Scripts/plasma_store.exe
+Talk-Sheet/Scripts/pip3.exe
+Talk-Sheet/Scripts/pip3.10.exe
+Talk-Sheet/Scripts/pip.exe
+Talk-Sheet/Scripts/normalizer.exe
+Talk-Sheet/Scripts/markdown-it.exe
+Talk-Sheet/Scripts/langchain-server.exe
+Talk-Sheet/Scripts/jsonschema.exe
+Talk-Sheet/Scripts/f2py.exe
+Talk-Sheet/Scripts/deactivate.bat
+Talk-Sheet/Scripts/Activate.ps1
+Talk-Sheet/Scripts/activate.bat
+Talk-Sheet/Scripts/activate
+Talk-Sheet/share/jupyter/nbextensions/pydeck/index.js.map
+Talk-Sheet/share/jupyter/nbextensions/pydeck/index.js
+Talk-Sheet/pyvenv.cfg
+Talk-Sheet/Include/site/python3.10/greenlet/greenlet.h
+Talk-Sheet/etc/jupyter/nbconfig/notebook.d/pydeck.json
