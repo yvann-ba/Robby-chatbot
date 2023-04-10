@@ -1,8 +1,10 @@
 # Talk-Sheet
 
-Talk-Sheet is an AI chatbot featuring conversational memory, designed to enable users to discuss their CSV data in a more intuitive manner. 📄
+#### Talk-Sheet is an AI chatbot featuring conversational memory, designed to enable users to discuss their CSV data in a more intuitive manner. 📄
 
-By integrating the strengths of Langchain and OpenAI Talk-Sheet employs large language models to provide users with seamless, context-aware natural language interactions for a better understanding of their CSV data.
+#### By integrating the strengths of Langchain and OpenAI Talk-Sheet employs large language models to provide users with seamless, 
+
+#### context-aware natural language interactions for a better understanding of their CSV data.
 
 ## Quick Start
 To use Talk-Sheet, simply visit the following link :
