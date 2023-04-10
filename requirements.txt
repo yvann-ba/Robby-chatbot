@@ -1,7 +1,7 @@
-langchain
-streamlit
-pandas
+streamlit==1.21.0
 streamlit_chat
+pandas==1.5.3
+langchain==0.0.133
 openai
 chromadb
 tiktoken
