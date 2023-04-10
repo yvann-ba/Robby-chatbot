@@ -1,3 +1,7 @@
 langchain
 streamlit
 pandas
+streamlit_chat
+openai
+chromadb
+tiktoken
