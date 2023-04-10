@@ -6,7 +6,7 @@
 ## Quick Start
 To use Talk-Sheet, simply visit the following link :
 
-[Talk-Sheet](https://talk-sheet.streamlit.app/)
+[Talk-Sheet.app](https://talk-sheet.streamlit.app/)
 
 
 ## Running Locally
