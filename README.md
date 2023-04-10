@@ -1,15 +1,15 @@
-# Talk-Sheet 📄
+# Talk-Sheet 🤖
 
-### Talk-Sheet is an AI chatbot featuring conversational memory, designed to enable users to discuss their CSV data in a more intuitive manner. 
-#### By integrating the strengths of Langchain and OpenAI Talk-Sheet employs large language models to provide users with seamless, context-aware natural language interactions for a better understanding of their CSV data.
+### Talk-Sheet is an AI chatbot featuring conversational memory, designed to enable users to discuss their CSV data in a more intuitive manner. 📄
+#### By integrating the strengths of Langchain and OpenAI Talk-Sheet employs large language models to provide users with seamless, context-aware natural language interactions for a better understanding of their CSV data.🧠
 
-## Quick Start
+## Quick Start 🚀
 To use Talk-Sheet, simply visit the following link :
 
 [Talk-Sheet.app](https://talk-sheet.streamlit.app/)
 
 
-## Running Locally
+## Running Locally 💻
 Follow these steps to set up and run the service locally :
 
 ### Prerequisites
@@ -42,4 +42,4 @@ Launch the chat service locally :
 
 `streamlit run src/app.py`
 
-#### That's it! The service is now up and running locally.
+#### That's it! The service is now up and running locally. 🤗
