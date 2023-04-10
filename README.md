@@ -42,4 +42,4 @@ Launch the chat service locally :
 
 `streamlit run src/app.py`
 
-#### That's it! The service is now up and running locally. 🤗
+### That's it! The service is now up and running locally. 🤗
