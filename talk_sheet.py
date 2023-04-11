@@ -1,3 +1,4 @@
+from fastapi import Query
 import streamlit as st
 import pandas as pd
 import os
@@ -13,9 +14,26 @@ from langchain.document_loaders.csv_loader import CSVLoader
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.chains import RetrievalQA
-from langchain.memory import ChatMessageHistory
 from langchain.callbacks import get_openai_callback
+from sympy import use
 import tiktoken
+from langchain.chains import ConversationChain
+from langchain.memory import ChatMessageHistory
+from langchain.memory import ConversationBufferMemory
+from langchain.chains.question_answering import load_qa_chain
+import streamlit as st
+from langchain.chains import ConversationChain
+from langchain.chains.conversation.memory import ConversationEntityMemory
+from langchain.chains.conversation.prompt import ENTITY_MEMORY_CONVERSATION_TEMPLATE
+from langchain.llms import OpenAI
+from langchain.chains import ChatVectorDBChain
+from langchain.chains import ConversationalRetrievalChain
+from langchain.chains.qa_with_sources import load_qa_with_sources_chain
+from langchain.chains import LLMChain
+from langchain.chains.conversation.memory import ConversationSummaryMemory
+
+
+
 
 # Configure the Streamlit page
 st.set_page_config(layout="wide", page_icon="contents\logo_site.png", page_title="Talk-Sheet")
@@ -41,7 +59,7 @@ if user_secret == "":
     )
 else:
     # Upload CSV file
-    uploaded_file = st.sidebar.file_uploader(".", type=["csv"])
+    uploaded_file = st.sidebar.file_uploader(label=" ",label_visibility='hidden', type=["csv"])
     if uploaded_file is not None:
         # Show uploaded CSV file
         def show_user_file(uploaded_file):
@@ -62,108 +80,80 @@ else:
     if uploaded_file:
         
         # Save user's CSV file
-        def save_user_file(uploaded_file):
-            save_folder = 'contents\dataset'
-            save_path = Path(save_folder, uploaded_file.name)
-            with open(save_path, mode='wb') as w:
-                w.write(uploaded_file.getvalue())
-                
-            file_path_user=os.path.join('contents\dataset', uploaded_file.name)
-            return file_path_user
-        user_file_path = save_user_file(uploaded_file)
-         
-        # Create custom prompt for CSV chatbot
-        def adapt_llm_response_to_prompt():
-            prompt_template = (
-            "You are Talk-Sheet, a user-friendly chatbot designed to assist users by engaging in conversations based on data from CSV or Excel files. "
-            "Your knowledge comes from:"
+        save_folder = 'contents\dataset'
+        save_path = Path(save_folder, uploaded_file.name)
+        with open(save_path, mode='wb') as w:
+            w.write(uploaded_file.getvalue())
+            
+        file_path_user=os.path.join('contents\dataset', uploaded_file.name)
 
-            " {context} "
-
-            "Help users by providing relevant information from the data in their files. Answer their questions accurately and concisely. "
-            "If the user's specific issue or need cannot be addressed with the available data, "
-            "empathize with their situation and suggest that they may need to seek assistance elsewhere. "
-            "Always maintain a friendly and helpful tone. "
-            "If you don't know the answer to a question, truthfully say you don't know."
-
-            "Human: {question} "
-
-            "Talk-Sheet: "
-            )
-
-            PROMPT = PromptTemplate(template=prompt_template, input_variables=["context","question"])
-            chain_type_kwargs = {"prompt": PROMPT}
-            return chain_type_kwargs
+        memory = ConversationSummaryMemory(llm=OpenAI(), memory_key="chat_history")
         
-        custom_pompt = adapt_llm_response_to_prompt()
-        
+
+        with st.sidebar.expander(" 🛠️ Settings ", expanded=False):
+
+            MODEL = st.selectbox(label='Model', options=['gpt-3.5-turbo','gpt-4'])
+            
+
         try:
             # Create retriever from user's CSV file
-            def formalize_user_file_for_llm(file_path_user):
-                loader = CSVLoader(file_path=file_path_user, encoding="utf-8")
-                data = loader.load()
-                text_splitter = CharacterTextSplitter(chunk_size=1500, chunk_overlap=0)
-                texts = text_splitter.split_documents(data)
+            loader = CSVLoader(file_path=file_path_user, encoding="utf-8")
+            data = loader.load()
+            text_splitter = CharacterTextSplitter(separator="\n",chunk_size=1500, chunk_overlap=0)
+            documents = text_splitter.split_documents(data)
 
-                embeddings = OpenAIEmbeddings()
-                
-                db = Chroma.from_documents(texts, embeddings)
-                retriever = db.as_retriever()
-                return retriever
+            embeddings = OpenAIEmbeddings()
             
-            retriever_db = formalize_user_file_for_llm(user_file_path)
-            
-            # Initialize RetrievalQA with custom prompt and retriever
-            qa = RetrievalQA.from_chain_type(llm =ChatOpenAI(temperature=0, model="gpt-3.5-turbo"), chain_type='stuff', retriever=retriever_db, chain_type_kwargs=custom_pompt)
-            
-        
-            
-            def count_tokens(chain, query):
-                with get_openai_callback() as cb:
-                    result = chain.run(query)
-                    print(f'Spent a total of {cb.total_tokens} tokens')
+            vectorstore = Chroma.from_documents(documents, embeddings)
 
-                return result
+            # return ConversationRetrievalChain that answers user questions based on a given document store
+            chain = ConversationalRetrievalChain.from_llm(ChatOpenAI(temperature=0, model_name=MODEL),
+                retriever=vectorstore.as_retriever(search_type="similarity", search_kwargs={"k":2})
+            )
+    
             # Chatbot UI function
-            def chatbot_ui(qa):
-                if 'generated' not in st.session_state:
-                    st.session_state['generated'] = []
+            if 'generated' not in st.session_state:
+                st.session_state['generated'] = []
 
-                if 'past' not in st.session_state:
-                    st.session_state['past'] = []
+            if 'past' not in st.session_state:
+                st.session_state['past'] = []
 
-                def generate_response(query):
-                    response = qa.run(query)
-                    print(f"Type of response: {type(response)}, response: {response}")
-                    return response
+            def generate_response(query):
+                chat_history = []
 
-                def get_text():
-                    input_text = st.text_input("##### Let's Talk ! 👇: ", key="input")
-                    return input_text
-                
-                user_input = get_text()
+                result = chain({'chat_history': {}, 'question': query})
+                chat_history = []
+                query = query
+                result = chain({"question": query, "chat_history": chat_history})
+                response = result["answer"]
+                print(f"Type of response: {type(response)}, response: {response}")
+                return response
 
-                if user_input:
-                    output = generate_response(user_input)
+            def get_text():
+                input_text = st.text_input("##### Let's Talk ! 👇: ", key="input", placeholder="Your AI assistant here! Ask me anything ...")
+                return input_text
+            
+            user_input = get_text()
 
-                    st.session_state.past.append(user_input)
-                    st.session_state.generated.append(output)
+            if user_input:
+                output = generate_response(user_input)
 
-                if st.session_state['generated']:
-                    print(f"st.session_state['generated']: {st.session_state['generated']}")
+                st.session_state.past.append(user_input)
+                st.session_state.generated.append(output)
 
-                    for i in range(len(st.session_state['generated'])-1, -1, -1):
-                        message(st.session_state["generated"][i], key=str(i))
-                        message(st.session_state['past'][i], is_user=True, key=str(i) + '_user')
-                        
-            chatbot_ui(qa)
+            if st.session_state['generated']:
+                print(f"st.session_state['generated']: {st.session_state['generated']}")
+
+                for i in range(len(st.session_state['generated'])-1, -1, -1):
+                    message(st.session_state["generated"][i], key=str(i))
+                    message(st.session_state['past'][i], is_user=True, key=str(i) + '_user')
         except Exception as e:
             st.error(f"Error: {str(e)}")
 
 
 
 # About section
-st.sidebar.title("About Talk-Sheet 🤖")
-st.sidebar.subheader("Talk-Sheet is a user-friendly chatbot designed to assist users by engaging in conversations based on data from CSV or excel files. 📄")
-st.sidebar.subheader("Ideal for various purposes and users, Talk-Sheet provides a simple yet effective way to interact with your sheet-data. 🌐")
-st.sidebar.subheader("Powered by ChatGPT API, Langchain, and OpenAI, Talk-Sheet offers a seamless and personalized experience. ⚡")
+about = st.sidebar.expander("About Talk-Sheet 🤖")
+about.write("#### Talk-Sheet is a user-friendly chatbot designed to assist users by engaging in conversations based on data from CSV or excel files. 📄")
+about.write("#### Ideal for various purposes and users, Talk-Sheet provides a simple yet effective way to interact with your sheet-data. 🌐")
+about.write("#### Powered by [Langchain]('https://github.com/hwchase17/langchain'), [OpenAI]('https://platform.openai.com/docs/models/gpt-3-5') and [Streamlit]('https://github.com/streamlit/streamlit') Talk-Sheet offers a seamless and personalized experience. ⚡")
