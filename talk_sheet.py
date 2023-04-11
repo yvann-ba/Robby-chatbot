@@ -16,6 +16,8 @@ from langchain.chains import RetrievalQA
 from langchain.memory import ChatMessageHistory
 from langchain.callbacks import get_openai_callback
 import tiktoken
+from langchain.chains.question_answering import load_qa_chain
+from langchain.chains import ConversationalRetrievalChain
 
 # Configure the Streamlit page
 st.set_page_config(layout="wide", page_icon="contents\logo_site.png", page_title="Talk-Sheet")
@@ -113,26 +115,43 @@ else:
             
             retriever_db = formalize_user_file_for_llm(user_file_path)
             
+            async def conversational_chat(query):
+                result = qa({"question": query, "chat_history": st.session_state['history']})
+                st.session_state['history'].append((query, result["answer"]))
+                print("Log: ")
+                print(st.session_state['history'])
+                return result["answer"]
+            
+            llm = ChatOpenAI(model_name="gpt-3.5-turbo")
+            chain = load_qa_chain(llm, chain_type="stuff")
+            
+            if 'history' not in st.session_state:
+                st.session_state['history'] = []
+                
+            if 'ready' not in st.session_state:
+                st.session_state['ready'] = False
+                
             # Initialize RetrievalQA with custom prompt and retriever
-            qa = RetrievalQA.from_chain_type(llm =ChatOpenAI(temperature=0, model="gpt-3.5-turbo"), chain_type='stuff', retriever=retriever_db, chain_type_kwargs=custom_pompt)
+            qa = ConversationalRetrievalChain.from_llm(ChatOpenAI(model_name="gpt-3.5-turbo"), retriever=retriever_db, return_source_documents=True)
             
-        
+            st.session_state['ready'] = True
             
-            def count_tokens(chain, query):
-                with get_openai_callback() as cb:
-                    result = chain.run(query)
-                    print(f'Spent a total of {cb.total_tokens} tokens')
-
-                return result
             # Chatbot UI function
-            def chatbot_ui(qa):
-                if 'generated' not in st.session_state:
-                    st.session_state['generated'] = []
 
-                if 'past' not in st.session_state:
-                    st.session_state['past'] = []
+            if 'generated' not in st.session_state:
+                st.session_state['generated'] = []
 
-                def generate_response(query):
+            if 'past' not in st.session_state:
+                st.session_state['past'] = []
+                
+            # container for chat history
+            response_container = st.container()
+
+            # container for text box
+            container = st.container()
+            
+            with container:
+                async def generate_response(query):
                     response = qa.run(query)
                     print(f"Type of response: {type(response)}, response: {response}")
                     return response
@@ -144,26 +163,27 @@ else:
                 user_input = get_text()
 
                 if user_input:
-                    output = generate_response(user_input)
+                    output = conversational_chat(user_input)
 
-                    st.session_state.past.append(user_input)
-                    st.session_state.generated.append(output)
+                    st.session_state['past'].append(user_input)
+                    st.session_state['generated'].append(output)
 
-                if st.session_state['generated']:
+            if st.session_state['generated']:
+                with response_container:
                     print(f"st.session_state['generated']: {st.session_state['generated']}")
-
+    
                     for i in range(len(st.session_state['generated'])-1, -1, -1):
                         message(st.session_state["generated"][i], key=str(i))
                         message(st.session_state['past'][i], is_user=True, key=str(i) + '_user')
                         
-            chatbot_ui(qa)
+
         except Exception as e:
             st.error(f"Error: {str(e)}")
 
 
 
 # About section
-st.sidebar.title("About Talk-Sheet 🤖")
-st.sidebar.subheader("Talk-Sheet is a user-friendly chatbot designed to assist users by engaging in conversations based on data from CSV or excel files. 📄")
-st.sidebar.subheader("Ideal for various purposes and users, Talk-Sheet provides a simple yet effective way to interact with your sheet-data. 🌐")
-st.sidebar.subheader("Powered by ChatGPT API, Langchain, and OpenAI, Talk-Sheet offers a seamless and personalized experience. ⚡")
+about = st.sidebar.expander("About Talk-Sheet 🤖")
+about.write("#### Talk-Sheet is a user-friendly chatbot designed to assist users by engaging in conversations based on data from CSV or excel files. 📄")
+about.write("#### Ideal for various purposes and users, Talk-Sheet provides a simple yet effective way to interact with your sheet-data. 🌐")
+about.write("#### Powered by [Langchain]('https://github.com/hwchase17/langchain'), [OpenAI]('https://platform.openai.com/docs/models/gpt-3-5') and [Streamlit]('https://github.com/streamlit/streamlit') Talk-Sheet offers a seamless and personalized experience. ⚡")
