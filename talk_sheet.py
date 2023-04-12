@@ -66,34 +66,37 @@ async def main():
 
                 loader = CSVLoader(file_path=tmp_file_path, encoding="utf-8")
                 data = loader.load()
-
-                splitter = CharacterTextSplitter(separator="\n", chunk_size=1500, chunk_overlap=0)
+                
+                splitter = CharacterTextSplitter(separator="\n",chunk_size=1500, chunk_overlap=0)
                 chunks = splitter.split_documents(data)
-
+                
                 embeddings = OpenAIEmbeddings()
                 vectors = Chroma.from_documents(chunks, embeddings)
                 os.remove(tmp_file_path)
 
-                # Serialize only necessary data
-                serialized_data = {
-                    'vector_data': vectors.vector_data,
-                    'document_data': vectors.document_data
-                }
-
+                
                 with open(filename + ".pkl", "wb") as f:
-                    pickle.dump(serialized_data, f)
+                    pickle.dump(vectors, f)
 
+                
             async def getDocEmbeds(file, filename):
-                if not os.path.isfile(filename + ".pkl"):
+                if not os.path.isfile(filename + ".pkl") or os.path.getsize(filename + ".pkl") <= 0:
                     await storeDocEmbeds(file, filename)
 
                 with open(filename + ".pkl", "rb") as f:
-                    serialized_data = pickle.load(f)
+                    try:
+                        serialized_data = pickle.load(f)
+                    except EOFError:
+                        # If the file is empty or corrupt, regenerate it
+                        await storeDocEmbeds(file, filename)
+                        with open(filename + ".pkl", "rb") as f:
+                            serialized_data = pickle.load(f)
 
                 # Deserialize data and reconstruct the vectors object
                 vectors = Chroma(vector_data=serialized_data['vector_data'], document_data=serialized_data['document_data'])
 
                 return vectors
+
             
 
             async def conversational_chat(query):
