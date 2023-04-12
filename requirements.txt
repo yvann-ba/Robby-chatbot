@@ -1,7 +1,8 @@
-streamlit==1.21.0
+streamlit
 streamlit_chat
-pandas==1.5.3
-langchain==0.0.133
+pandas
+langchain
 openai
 chromadb
 tiktoken
+faiss-cpu

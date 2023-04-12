@@ -1,15 +1,11 @@
 
 from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.vectorstores import FAISS
-from langchain.chains.question_answering import load_qa_chain
 from langchain.chat_models import ChatOpenAI
 from langchain.chains import ConversationalRetrievalChain
 import pickle
 from langchain.document_loaders.csv_loader import CSVLoader
 
-from pathlib import Path
-from dotenv import load_dotenv
+
 import os
 import streamlit as st
 from streamlit_chat import message
@@ -17,6 +13,7 @@ from langchain.text_splitter import CharacterTextSplitter
 import tempfile
 import pandas as pd
 from langchain.prompts import PromptTemplate
+from langchain.vectorstores import Chroma
 
 import asyncio
 
@@ -74,7 +71,7 @@ async def main():
                 chunks = splitter.split_documents(data)
                 
                 embeddings = OpenAIEmbeddings()
-                vectors = FAISS.from_documents(chunks, embeddings)
+                vectors = Chroma.from_documents(chunks, embeddings)
                 os.remove(tmp_file_path)
 
                 
