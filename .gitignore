@@ -162,3 +162,4 @@ poto-associations-sample.csv.pkl
 .chroma/index/index_c44e4b69-0e90-41b5-8f83-9c1fd114daab.bin
 .chroma/index/id_to_uuid_f2b3bfe1-6ee9-4665-bbd5-20dcc1db40c7.pkl
 .chroma/index/id_to_uuid_c44e4b69-0e90-41b5-8f83-9c1fd114daab.pkl
+*.pkl
