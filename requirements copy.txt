@@ -1,7 +1,0 @@
-streamlit
-streamlit_chat
-pandas
-langchain
-openai
-chromadb
-tiktoken
