@@ -184,3 +184,7 @@ Talk-Sheet/pyvenv.cfg
 Talk-Sheet/Include/site/python3.10/greenlet/greenlet.h
 Talk-Sheet/etc/jupyter/nbconfig/notebook.d/pydeck.json
 poto-associations-sample.csv.pkl
+.chroma/index/id_to_uuid_f2b3bfe1-6ee9-4665-bbd5-20dcc1db40c7.pkl
+.chroma/index/index_f2b3bfe1-6ee9-4665-bbd5-20dcc1db40c7.bin
+.chroma/index/index_metadata_f2b3bfe1-6ee9-4665-bbd5-20dcc1db40c7.pkl
+.chroma/index/uuid_to_id_f2b3bfe1-6ee9-4665-bbd5-20dcc1db40c7.pkl
