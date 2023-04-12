@@ -66,28 +66,33 @@ async def main():
 
                 loader = CSVLoader(file_path=tmp_file_path, encoding="utf-8")
                 data = loader.load()
-                
-                splitter = CharacterTextSplitter(separator="\n",chunk_size=1500, chunk_overlap=0)
+
+                splitter = CharacterTextSplitter(separator="\n", chunk_size=1500, chunk_overlap=0)
                 chunks = splitter.split_documents(data)
-                
+
                 embeddings = OpenAIEmbeddings()
                 vectors = Chroma.from_documents(chunks, embeddings)
                 os.remove(tmp_file_path)
 
-                
-                with open(filename + ".pkl", "wb") as f:
-                    pickle.dump(vectors, f)
+                # Serialize only necessary data
+                serialized_data = {
+                    'vector_data': vectors.vector_data,
+                    'document_data': vectors.document_data
+                }
 
-                
+                with open(filename + ".pkl", "wb") as f:
+                    pickle.dump(serialized_data, f)
+
             async def getDocEmbeds(file, filename):
-                
                 if not os.path.isfile(filename + ".pkl"):
                     await storeDocEmbeds(file, filename)
-                
+
                 with open(filename + ".pkl", "rb") as f:
-                    global vectores
-                    vectors = pickle.load(f)
-                    
+                    serialized_data = pickle.load(f)
+
+                # Deserialize data and reconstruct the vectors object
+                vectors = Chroma(vector_data=serialized_data['vector_data'], document_data=serialized_data['document_data'])
+
                 return vectors
             
 
