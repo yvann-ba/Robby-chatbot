@@ -58,44 +58,44 @@ async def main():
             )
     
         
-        if uploaded_file :
-            async def storeDocEmbeds(file, filename):
-                with tempfile.NamedTemporaryFile(mode="wb", delete=False) as tmp_file:
-                    tmp_file.write(file)
-                    tmp_file_path = tmp_file.name
 
-                loader = CSVLoader(file_path=tmp_file_path, encoding="utf-8")
-                data = loader.load()
-                
-                splitter = CharacterTextSplitter(separator="\n",chunk_size=1500, chunk_overlap=0)
-                chunks = splitter.split_documents(data)
-                
-                embeddings = OpenAIEmbeddings()
-                vectors = Chroma.from_documents(chunks, embeddings)
-                os.remove(tmp_file_path)
+        async def storeDocEmbeds(file, filename):
+            with tempfile.NamedTemporaryFile(mode="wb", delete=False) as tmp_file:
+                tmp_file.write(file)
+                tmp_file_path = tmp_file.name
 
-                
-                with open(filename + ".pkl", "wb") as f:
-                    pickle.dump(vectors, f)
-
-                
-            async def getDocEmbeds(file, filename):
-                if not os.path.isfile(filename + ".pkl"):
-                    await storeDocEmbeds(file, filename)
-
-                if os.path.getsize(filename + ".pkl") > 0:
-                    with open(filename + ".pkl", "rb") as f:
-                        global vectors
-                        vectors = pickle.load(f)
-                else:
-                    print("Le fichier est vide.")
-                    # Vous pouvez également définir `vectors` à une valeur par défaut ici si nécessaire
-                    # par exemple : vectors = []
-
-                return vectors
+            loader = CSVLoader(file_path=tmp_file_path, encoding="utf-8")
+            data = loader.load()
+            
+            splitter = CharacterTextSplitter(separator="\n",chunk_size=1500, chunk_overlap=0)
+            chunks = splitter.split_documents(data)
+            
+            embeddings = OpenAIEmbeddings()
+            vectors = Chroma.from_documents(chunks, embeddings)
+            os.remove(tmp_file_path)
 
             
+            with open(filename + ".pkl", "wb") as f:
+                pickle.dump(vectors, f)
 
+            
+        async def getDocEmbeds(file, filename):
+            if not os.path.isfile(filename + ".pkl"):
+                await storeDocEmbeds(file, filename)
+
+            if os.path.getsize(filename + ".pkl") > 0:
+                with open(filename + ".pkl", "rb") as f:
+                    global vectors
+                    vectors = pickle.load(f)
+            else:
+                print("Le fichier est vide.")
+                # Vous pouvez également définir `vectors` à une valeur par défaut ici si nécessaire
+                # par exemple : vectors = []
+
+            return vectors
+
+        
+        if uploaded_file :
             async def conversational_chat(query):
                 result = qa({"question": query, "chat_history": st.session_state['history']})
                 st.session_state['history'].append((query, result["answer"]))
