@@ -5,5 +5,3 @@ langchain
 openai
 chromadb
 tiktoken
-asyncio
-pickle
