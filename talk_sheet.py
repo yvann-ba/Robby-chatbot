@@ -13,7 +13,7 @@ from langchain.text_splitter import CharacterTextSplitter
 import tempfile
 import pandas as pd
 from langchain.prompts import PromptTemplate
-from langchain.vectorstores import Chroma
+from langchain.vectorstores import FAISS
 
 import asyncio
 
@@ -71,7 +71,7 @@ async def main():
                 chunks = splitter.split_documents(data)
                 
                 embeddings = OpenAIEmbeddings()
-                vectors = Chroma.from_documents(chunks, embeddings)
+                vectors = FAISS.from_documents(chunks, embeddings)
                 os.remove(tmp_file_path)
 
                 
