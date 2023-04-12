@@ -43,7 +43,7 @@ async def main():
         os.environ["OPENAI_API_KEY"] = user_api_key
         
         uploaded_file = st.sidebar.file_uploader("", type="csv", label_visibility="hidden")
-        if uploaded_file:
+        if uploaded_file is not None:
             # Show uploaded CSV file
             def show_user_file(uploaded_file):
                 file_container = st.expander("Votre fichier CSV :")
@@ -58,145 +58,145 @@ async def main():
             )
     
         
+        if uploaded_file :
+            async def storeDocEmbeds(file, filename):
+                with tempfile.NamedTemporaryFile(mode="wb", delete=False) as tmp_file:
+                    tmp_file.write(file)
+                    tmp_file_path = tmp_file.name
 
-        async def storeDocEmbeds(file, filename):
-            with tempfile.NamedTemporaryFile(mode="wb", delete=False) as tmp_file:
-                tmp_file.write(file)
-                tmp_file_path = tmp_file.name
-
-            loader = CSVLoader(file_path=tmp_file_path, encoding="utf-8")
-            data = loader.load()
-            
-            splitter = CharacterTextSplitter(separator="\n",chunk_size=1500, chunk_overlap=0)
-            chunks = splitter.split_documents(data)
-            
-            embeddings = OpenAIEmbeddings()
-            vectors = Chroma.from_documents(chunks, embeddings)
-            os.remove(tmp_file_path)
-
-            
-            with open(filename + ".pkl", "wb") as f:
-                pickle.dump(vectors, f)
-
-            
-        async def getDocEmbeds(file, filename):
-            
-            if not os.path.isfile(filename + ".pkl"):
-                await storeDocEmbeds(file, filename)
-            
-            with open(filename + ".pkl", "rb") as f:
-                global vectores
-                vectors = pickle.load(f)
+                loader = CSVLoader(file_path=tmp_file_path, encoding="utf-8")
+                data = loader.load()
                 
-            return vectors
+                splitter = CharacterTextSplitter(separator="\n",chunk_size=1500, chunk_overlap=0)
+                chunks = splitter.split_documents(data)
+                
+                embeddings = OpenAIEmbeddings()
+                vectors = Chroma.from_documents(chunks, embeddings)
+                os.remove(tmp_file_path)
 
-        
+                
+                with open(filename + ".pkl", "wb") as f:
+                    pickle.dump(vectors, f)
 
-        async def conversational_chat(query):
-            result = qa({"question": query, "chat_history": st.session_state['history']})
-            st.session_state['history'].append((query, result["answer"]))
-            print("Log: ")
-            print(st.session_state['history'])
-            return result["answer"]
-
-        prompt_template = (
-        "You are Talk-Sheet, a user-friendly chatbot designed to assist users by engaging in conversations based on data from CSV or Excel files. "
-        "Your knowledge comes from:"
-
-        "{context}"
-
-        "Help users by providing relevant information from the data in their files. Answer their questions accurately and concisely. "
-        "If the user's specific issue or need cannot be addressed with the available data, "
-        "empathize with their situation and suggest that they may need to seek assistance elsewhere. "
-        "Always maintain a friendly and helpful tone. "
-        "If you don't know the answer to a question, truthfully say you don't know."
-        "answers the user's question in the same language as the user"
-  
-        "Human: {question} "
-
-        "Talk-Sheet: "
-        )
-
-        PROMPT = PromptTemplate(template=prompt_template, input_variables=["context","question"])
-
-                # Set up sidebar with various options
-        with st.sidebar.expander("🛠️ setting", expanded=False):
-            # Option to preview memory store
-            if st.button("Reset Chat"):
-                st.session_state['reset_chat'] = True
-
-            MODEL = st.selectbox(label='Model', options=['gpt-3.5-turbo','gpt-4'])
-            
-        #llm = ChatOpenAI(model_name="gpt-3.5-turbo")
-        #chain = load_qa_chain(llm, chain_type="stuff")
-        
-
-        if 'history' not in st.session_state:
-            st.session_state['history'] = []
-
-
-        if 'ready' not in st.session_state:
-            st.session_state['ready'] = False
-            
-        if 'reset_chat' not in st.session_state:
-            st.session_state['reset_chat'] = False
-
-
-        
-
-        if uploaded_file is not None:
-
-            with st.spinner("Processing..."):
-            # Add your code here that needs to be executed
-                uploaded_file.seek(0)
-                file = uploaded_file.read()
-                # pdf = PyPDF2.PdfFileReader()
-                vectors = await getDocEmbeds(file, uploaded_file.name)
-                qa = ConversationalRetrievalChain.from_llm(ChatOpenAI(model_name=MODEL), retriever=vectors.as_retriever(), qa_prompt=PROMPT,return_source_documents=False)
-
-            st.session_state['ready'] = True
-
-
-        if st.session_state['ready']:
-
-                # Le reste du code existant
-
-            if 'generated' not in st.session_state:
-                st.session_state['generated'] = ["Welcome! You can now ask any questions regarding " + uploaded_file.name]
-
-            if 'past' not in st.session_state:
-                st.session_state['past'] = ["Hey!"]
-
-            # container for chat history
-            response_container = st.container()
-            
-            # container for text box
-            container = st.container()
-
-            with container:
-                with st.form(key='my_form', clear_on_submit=True):
-                    user_input = st.text_input("Query:", placeholder="e.g: Summarize the paper in a few sentences", key='input')
-                    submit_button = st.form_submit_button(label='Send')
+                
+            async def getDocEmbeds(file, filename):
+                
+                if not os.path.isfile(filename + ".pkl"):
+                    await storeDocEmbeds(file, filename)
+                
+                with open(filename + ".pkl", "rb") as f:
+                    global vectores
+                    vectors = pickle.load(f)
                     
+                return vectors
 
-                    if st.session_state['reset_chat']:
-                        st.session_state['history'] = []
-                        st.session_state['past'] = ["Hey!"]
-                        st.session_state['generated'] = ["Welcome! You can now ask any questions regarding " + uploaded_file.name]
-                        response_container.empty()
-                        st.session_state['reset_chat'] = False
+            
 
-                if submit_button and user_input:
-                    output = await conversational_chat(user_input)
-                    st.session_state['past'].append(user_input)
-                    st.session_state['generated'].append(output)
+            async def conversational_chat(query):
+                result = qa({"question": query, "chat_history": st.session_state['history']})
+                st.session_state['history'].append((query, result["answer"]))
+                print("Log: ")
+                print(st.session_state['history'])
+                return result["answer"]
 
-            if st.session_state['generated']:
-                with response_container:
-                    for i in range(len(st.session_state['generated'])):
-                        message(st.session_state["past"][i], is_user=True, key=str(i) + '_user', avatar_style="big-smile")
-                        message(st.session_state["generated"][i], key=str(i), avatar_style="thumbs")
-        
+            prompt_template = (
+            "You are Talk-Sheet, a user-friendly chatbot designed to assist users by engaging in conversations based on data from CSV or Excel files. "
+            "Your knowledge comes from:"
+
+            "{context}"
+
+            "Help users by providing relevant information from the data in their files. Answer their questions accurately and concisely. "
+            "If the user's specific issue or need cannot be addressed with the available data, "
+            "empathize with their situation and suggest that they may need to seek assistance elsewhere. "
+            "Always maintain a friendly and helpful tone. "
+            "If you don't know the answer to a question, truthfully say you don't know."
+            "answers the user's question in the same language as the user"
+      
+            "Human: {question} "
+
+            "Talk-Sheet: "
+            )
+
+            PROMPT = PromptTemplate(template=prompt_template, input_variables=["context","question"])
+
+                    # Set up sidebar with various options
+            with st.sidebar.expander("🛠️ setting", expanded=False):
+                # Option to preview memory store
+                if st.button("Reset Chat"):
+                    st.session_state['reset_chat'] = True
+
+                MODEL = st.selectbox(label='Model', options=['gpt-3.5-turbo','gpt-4'])
+                
+            #llm = ChatOpenAI(model_name="gpt-3.5-turbo")
+            #chain = load_qa_chain(llm, chain_type="stuff")
+            
+
+            if 'history' not in st.session_state:
+                st.session_state['history'] = []
+
+
+            if 'ready' not in st.session_state:
+                st.session_state['ready'] = False
+                
+            if 'reset_chat' not in st.session_state:
+                st.session_state['reset_chat'] = False
+
+
+            
+
+            if uploaded_file is not None:
+
+                with st.spinner("Processing..."):
+                # Add your code here that needs to be executed
+                    uploaded_file.seek(0)
+                    file = uploaded_file.read()
+                    # pdf = PyPDF2.PdfFileReader()
+                    vectors = await getDocEmbeds(file, uploaded_file.name)
+                    qa = ConversationalRetrievalChain.from_llm(ChatOpenAI(model_name=MODEL), retriever=vectors.as_retriever(), qa_prompt=PROMPT,return_source_documents=False)
+
+                st.session_state['ready'] = True
+
+
+            if st.session_state['ready']:
+
+                    # Le reste du code existant
+
+                if 'generated' not in st.session_state:
+                    st.session_state['generated'] = ["Welcome! You can now ask any questions regarding " + uploaded_file.name]
+
+                if 'past' not in st.session_state:
+                    st.session_state['past'] = ["Hey!"]
+
+                # container for chat history
+                response_container = st.container()
+                
+                # container for text box
+                container = st.container()
+
+                with container:
+                    with st.form(key='my_form', clear_on_submit=True):
+                        user_input = st.text_input("Query:", placeholder="e.g: Summarize the paper in a few sentences", key='input')
+                        submit_button = st.form_submit_button(label='Send')
+                        
+
+                        if st.session_state['reset_chat']:
+                            st.session_state['history'] = []
+                            st.session_state['past'] = ["Hey!"]
+                            st.session_state['generated'] = ["Welcome! You can now ask any questions regarding " + uploaded_file.name]
+                            response_container.empty()
+                            st.session_state['reset_chat'] = False
+
+                    if submit_button and user_input:
+                        output = await conversational_chat(user_input)
+                        st.session_state['past'].append(user_input)
+                        st.session_state['generated'].append(output)
+
+                if st.session_state['generated']:
+                    with response_container:
+                        for i in range(len(st.session_state['generated'])):
+                            message(st.session_state["past"][i], is_user=True, key=str(i) + '_user', avatar_style="big-smile")
+                            message(st.session_state["generated"][i], key=str(i), avatar_style="thumbs")
+            
     # About section
     about = st.sidebar.expander("About Talk-Sheet 🤖")
     about.write("#### Talk-Sheet is a user-friendly chatbot designed to assist users by engaging in conversations based on data from CSV or excel files. 📄")
