@@ -5,4 +5,5 @@ langchain
 openai
 chromadb
 tiktoken
-faiss-cpu
+asyncio
+pickle

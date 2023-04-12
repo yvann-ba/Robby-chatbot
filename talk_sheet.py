@@ -168,10 +168,7 @@ async def main():
 
                 # container for chat history
                 response_container = st.container()
-
-
-
-
+                
                 # container for text box
                 container = st.container()
 
