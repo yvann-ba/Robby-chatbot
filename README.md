@@ -24,7 +24,7 @@ Clone the repository :
 
 Navigate to the project directory :
 
-`cd MonAmiPoto-chat`
+`cd Talk-Sheet`
 
 
 Create a virtual environment :
@@ -40,6 +40,6 @@ Install the required dependencies in the virtual environment :
 
 Launch the chat service locally :
 
-`streamlit run src/app.py`
+`streamlit run talk_sheet.py`
 
 ### That's it! The service is now up and running locally. 🤗
