@@ -183,3 +183,4 @@ Talk-Sheet/share/jupyter/nbextensions/pydeck/index.js
 Talk-Sheet/pyvenv.cfg
 Talk-Sheet/Include/site/python3.10/greenlet/greenlet.h
 Talk-Sheet/etc/jupyter/nbconfig/notebook.d/pydeck.json
+poto-associations-sample.csv.pkl
