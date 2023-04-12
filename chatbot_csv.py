@@ -18,11 +18,11 @@ from langchain.chains.question_answering import load_qa_chain
 from langchain.chains.conversational_retrieval.prompts import CONDENSE_QUESTION_PROMPT
 
 # Set the Streamlit page configuration, including the layout and page title/icon
-st.set_page_config(layout="wide", page_icon="contents\logo_site.png", page_title="Talk-Sheet")
+st.set_page_config(layout="wide", page_icon="contents\logo_site.png", page_title="ChatBot-CSV")
 
 # Display the header for the application using HTML markdown
 st.markdown(
-    "<h1 style='text-align: center;'>Talk-Sheet, Talk with your  sheet-data ! 💬</h1>",
+    "<h1 style='text-align: center;'>ChatBot-CSV, Talk with your  csv-data ! 💬</h1>",
     unsafe_allow_html=True)
 
 # Allow the user to enter their OpenAI API key
@@ -174,7 +174,7 @@ async def main():
                         st.session_state['generated'] = ["Hello ! Ask me anything about " + uploaded_file.name + " 🤗"]
 
                     if 'past' not in st.session_state:
-                        st.session_state['past'] = ["Hey Talk-Sheet !"]
+                        st.session_state['past'] = ["Hey ! 👋"]
 
                     # Create a container for displaying the chat history
                     response_container = st.container()
@@ -194,7 +194,7 @@ async def main():
                             if st.session_state['reset_chat']:
                                 
                                 st.session_state['history'] = []
-                                st.session_state['past'] = ["Hey Talk-Sheet ! 👋"]
+                                st.session_state['past'] = ["Hey ! 👋"]
                                 st.session_state['generated'] = ["Hello ! Ask me anything about " + uploaded_file.name + " 🤗"]
                                 response_container.empty()
                                 st.session_state['reset_chat'] = False
@@ -224,13 +224,13 @@ async def main():
                 st.error(f"Error: {str(e)}")
 
     # Create an expander for the "About" section
-    about = st.sidebar.expander("About Talk-Sheet 🤖")
+    about = st.sidebar.expander("About 🤖")
     
     # Write information about the chatbot in the "About" section
-    about.write("#### Talk-Sheet is a user-friendly chatbot designed to assist users by engaging in conversations based on data from CSV or excel files. 📄")
-    about.write("#### Ideal for various purposes and users, Talk-Sheet provides a simple yet effective way to interact with your sheet-data. 🌐")
-    about.write("#### Powered by Langchain, OpenAI and Streamlit Talk-Sheet offers a seamless and personalized experience. ⚡")
-    about.write("#### Source code : yvann-hub/Talk-Sheet")
+    about.write("#### ChatBot-CSV is a user-friendly chatbot designed to assist users by engaging in conversations based on data from CSV or excel files. 📄")
+    about.write("#### Ideal for various purposes and users, ChatBot-CSV provides a simple yet effective way to interact with your sheet-data. 🌐")
+    about.write("#### Powered by Langchain, OpenAI and Streamlit ChatBot-CSV offers a seamless and personalized experience. ⚡")
+    about.write("#### Source code : yvann-hub/ChatBot-CSV")
 
 #Run the main function using asyncio
 if __name__ == "__main__":
