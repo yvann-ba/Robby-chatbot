@@ -58,7 +58,7 @@ async def main():
         else :
             st.sidebar.info(
             "👆 Upload your CSV file to get started, "
-            "sample : [fishfry-locations.csv](https://drive.google.com/file/d/18i7tN2CqrmoouaSqm3hDfAk17hmWx94e/view?usp=sharing)" 
+            "sample for try : [fishfry-locations.csv](https://drive.google.com/file/d/18i7tN2CqrmoouaSqm3hDfAk17hmWx94e/view?usp=sharing)" 
             )
     
         if uploaded_file :
@@ -72,7 +72,7 @@ async def main():
                         tmp_file_path = tmp_file.name
 
                     # Load the data from the CSV file using Langchain
-                    loader = CSVLoader(file_path=tmp_file_path, encoding="utf-8", csv_args={'delimiter': ','})
+                    loader = CSVLoader(file_path=tmp_file_path, encoding="utf-8")
                     data = loader.load()
 
                     # Create an embeddings object using Langchain
@@ -219,9 +219,9 @@ async def main():
     about = st.sidebar.expander("About 🤖")
     
     # Write information about the chatbot in the "About" section
-    about.write("#### ChatBot-CSV is a user-friendly chatbot designed to assist users by engaging in conversations based on data from CSV or excel files. 📄")
-    about.write("#### Ideal for various purposes and users, ChatBot-CSV provides a simple yet effective way to interact with your sheet-data. 🌐")
-    about.write("#### Powered by [Langchain](https://github.com/hwchase17/langchain), [OpenAI](https://platform.openai.com/docs/models/gpt-3-5) and [Streamlit](https://github.com/streamlit/streamlit) ChatBot-CSV offers a seamless and personalized experience. ⚡")
+    about.write("#### ChatBot-CSV is an AI chatbot featuring conversational memory, designed to enable users to discuss their CSV data in a more intuitive manner. 📄")
+    about.write("#### He employs large language models to provide users with seamless, context-aware natural language interactions for a better understanding of their CSV data. 🌐")
+    about.write("#### Powered by [Langchain](https://github.com/hwchase17/langchain), [OpenAI](https://platform.openai.com/docs/models/gpt-3-5) and [Streamlit](https://github.com/streamlit/streamlit) ⚡")
     about.write("#### Source code : [yvann-hub/ChatBot-CSV](https://github.com/yvann-hub/ChatBot-CSV)")
 
 #Run the main function using asyncio
