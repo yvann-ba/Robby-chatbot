@@ -1,12 +1,12 @@
-# Talk-Sheet 🤖
+# ChatBot-CSV 🤖
 
-### Talk-Sheet is an AI chatbot featuring conversational memory, designed to enable users to discuss their CSV data in a more intuitive manner. 📄
-#### By integrating the strengths of Langchain and OpenAI, Talk-Sheet employs large language models to provide users with seamless, context-aware natural language interactions for a better understanding of their CSV data.🧠
+An AI chatbot featuring conversational memory, designed to enable users to discuss their CSV data in a more intuitive manner. 📄
+#### By integrating the strengths of Langchain and OpenAI, ChatBot-CSV employs large language models to provide users with seamless, context-aware natural language interactions for a better understanding of their CSV data.🧠
 
 ## Quick Start 🚀
-To use Talk-Sheet, simply visit the following link :
+To use ChatBot-CSV, simply visit the following link :
 
-[Talk-Sheet.app](https://talk-sheet.streamlit.app/)
+[ChatBot-CSV.app](https://chatbot-csv.streamlit.app/)
 
 
 ## Running Locally 💻
@@ -19,12 +19,12 @@ Follow these steps to set up and run the service locally :
 ### Installation
 Clone the repository :
 
-`git clone https://github.com/yvann-hub/Talk-Sheet.git`
+`git clone https://github.com/yvann-hub/ChatBot-CSV.git`
 
 
 Navigate to the project directory :
 
-`cd Talk-Sheet`
+`cd ChatBot-CSV`
 
 
 Create a virtual environment :
