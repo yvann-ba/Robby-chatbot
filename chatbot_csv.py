@@ -221,7 +221,7 @@ async def main():
     # Write information about the chatbot in the "About" section
     about.write("#### ChatBot-CSV is a user-friendly chatbot designed to assist users by engaging in conversations based on data from CSV or excel files. 📄")
     about.write("#### Ideal for various purposes and users, ChatBot-CSV provides a simple yet effective way to interact with your sheet-data. 🌐")
-    about.write("#### Powered by [Langchain]('https://github.com/hwchase17/langchain'), [OpenAI]('https://platform.openai.com/docs/models/gpt-3-5') and [Streamlit]('https://github.com/streamlit/streamlit') ChatBot-CSV offers a seamless and personalized experience. ⚡")
+    about.write("#### Powered by [Langchain](https://github.com/hwchase17/langchain), [OpenAI](https://platform.openai.com/docs/models/gpt-3-5) and [Streamlit](https://github.com/streamlit/streamlit) ChatBot-CSV offers a seamless and personalized experience. ⚡")
     about.write("#### Source code : [yvann-hub/ChatBot-CSV](https://github.com/yvann-hub/ChatBot-CSV)")
 
 #Run the main function using asyncio
