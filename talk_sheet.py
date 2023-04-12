@@ -72,8 +72,6 @@ async def main():
                 
                 embeddings = OpenAIEmbeddings()
                 vectors = Chroma.from_documents(chunks, embeddings)
-                os.remove(tmp_file_path)
-
                 
                 with open(filename + ".pkl", "wb") as f:
                     pickle.dump(vectors, f)
