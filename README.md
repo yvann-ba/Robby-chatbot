@@ -1,7 +1,7 @@
 # Talk-Sheet 🤖
 
 ### Talk-Sheet is an AI chatbot featuring conversational memory, designed to enable users to discuss their CSV data in a more intuitive manner. 📄
-#### By integrating the strengths of Langchain and OpenAI Talk-Sheet employs large language models to provide users with seamless, context-aware natural language interactions for a better understanding of their CSV data.🧠
+#### By integrating the strengths of Langchain and OpenAI, Talk-Sheet employs large language models to provide users with seamless, context-aware natural language interactions for a better understanding of their CSV data.🧠
 
 ## Quick Start 🚀
 To use Talk-Sheet, simply visit the following link :
@@ -24,7 +24,7 @@ Clone the repository :
 
 Navigate to the project directory :
 
-`cd MonAmiPoto-chat`
+`cd Talk-Sheet`
 
 
 Create a virtual environment :
@@ -40,6 +40,12 @@ Install the required dependencies in the virtual environment :
 
 Launch the chat service locally :
 
-`streamlit run src/app.py`
+`streamlit run talk_sheet.py`
 
-### That's it! The service is now up and running locally. 🤗
+#### That's it! The service is now up and running locally. 🤗
+
+## Contributing
+Contributions are always welcome! If you want to contribute to this project, please open an issue or submit a pull request.
+
+## License
+This project is licensed under the MIT License - see the LICENSE file for details.
