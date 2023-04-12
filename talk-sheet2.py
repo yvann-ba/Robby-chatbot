@@ -16,6 +16,7 @@ from streamlit_chat import message
 from langchain.text_splitter import CharacterTextSplitter
 import tempfile
 import pandas as pd
+from langchain.prompts import PromptTemplate
 
 import asyncio
 
@@ -96,11 +97,29 @@ async def main():
         async def conversational_chat(query):
             result = qa({"question": query, "chat_history": st.session_state['history']})
             st.session_state['history'].append((query, result["answer"]))
-            # print("Log: ")
-            # print(st.session_state['history'])
+            print("Log: ")
+            print(st.session_state['history'])
             return result["answer"]
 
+        prompt_template = (
+        "You are Talk-Sheet, a user-friendly chatbot designed to assist users by engaging in conversations based on data from CSV or Excel files. "
+        "Your knowledge comes from:"
 
+        "{context}"
+
+        "Help users by providing relevant information from the data in their files. Answer their questions accurately and concisely. "
+        "If the user's specific issue or need cannot be addressed with the available data, "
+        "empathize with their situation and suggest that they may need to seek assistance elsewhere. "
+        "Always maintain a friendly and helpful tone. "
+        "If you don't know the answer to a question, truthfully say you don't know."
+        "answers the user's question in the same language as the user"
+  
+        "Human: {question} "
+
+        "Talk-Sheet: "
+        )
+
+        PROMPT = PromptTemplate(template=prompt_template, input_variables=["context","question"])
 
         
         llm = ChatOpenAI(model_name="gpt-3.5-turbo")
@@ -110,7 +129,7 @@ async def main():
             st.session_state['history'] = []
 
 
-        #Creating the chatbot interface
+
 
 
         if 'ready' not in st.session_state:
@@ -126,7 +145,7 @@ async def main():
                 file = uploaded_file.read()
                 # pdf = PyPDF2.PdfFileReader()
                 vectors = await getDocEmbeds(file, uploaded_file.name)
-                qa = ConversationalRetrievalChain.from_llm(llm =ChatOpenAI(model_name="gpt-3.5-turbo"), retriever=vectors.as_retriever(), return_source_documents=True)
+                qa = ConversationalRetrievalChain.from_llm(llm =ChatOpenAI(model_name="gpt-3.5-turbo"), retriever=vectors.as_retriever(), qa_prompt=PROMPT,return_source_documents=True)
 
             st.session_state['ready'] = True
 
@@ -142,7 +161,13 @@ async def main():
 
             # container for chat history
             response_container = st.container()
-
+                    #Creating the chatbot interface
+            reset_button = st.button("Reset Chat")
+            if reset_button:
+                st.session_state['history'] = []
+                st.session_state['past'] = ["Hey!"]
+                st.session_state['generated'] = ["Welcome! You can now ask any questions regarding " + uploaded_file.name]
+                response_container.empty()
             # container for text box
             container = st.container()
 
@@ -161,6 +186,7 @@ async def main():
                     for i in range(len(st.session_state['generated'])):
                         message(st.session_state["past"][i], is_user=True, key=str(i) + '_user', avatar_style="thumbs")
                         message(st.session_state["generated"][i], key=str(i), avatar_style="fun-emoji")
+            
     # About section
     about = st.sidebar.expander("About Talk-Sheet 🤖")
     about.write("#### Talk-Sheet is a user-friendly chatbot designed to assist users by engaging in conversations based on data from CSV or excel files. 📄")
