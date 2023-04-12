@@ -11,14 +11,10 @@ from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.chat_models import ChatOpenAI
 from langchain.chains import ConversationalRetrievalChain
 from langchain.document_loaders.csv_loader import CSVLoader
-from langchain.prompts import PromptTemplate
 from langchain.vectorstores import FAISS
-from langchain.chains import LLMChain
-from langchain.chains.question_answering import load_qa_chain
-from langchain.chains.conversational_retrieval.prompts import CONDENSE_QUESTION_PROMPT
 
 # Set the Streamlit page configuration, including the layout and page title/icon
-st.set_page_config(layout="wide", page_icon="🤖", page_title="ChatBot-CSV")
+st.set_page_config(layout="wide", page_icon="💬", page_title="ChatBot-CSV")
 
 # Display the header for the application using HTML markdown
 st.markdown(
@@ -156,8 +152,8 @@ async def main():
                         vectors = await getDocEmbeds(file, uploaded_file.name)
 
                         # Use the Langchain ConversationalRetrievalChain to set up the chatbot
-                        chain = ConversationalRetrievalChain.from_llm(llm = ChatOpenAI(temperature=0.0,model_name=MODEL),retriever=vectors.as_retriever(), 
-                                                                   )
+                        chain = ConversationalRetrievalChain.from_llm(llm = ChatOpenAI(temperature=0.0,model_name=MODEL),
+                                                                      retriever=vectors.as_retriever())
 
                     # Set the "ready" flag to True now that the chatbot is ready to chat
                     st.session_state['ready'] = True
@@ -225,8 +221,8 @@ async def main():
     # Write information about the chatbot in the "About" section
     about.write("#### ChatBot-CSV is a user-friendly chatbot designed to assist users by engaging in conversations based on data from CSV or excel files. 📄")
     about.write("#### Ideal for various purposes and users, ChatBot-CSV provides a simple yet effective way to interact with your sheet-data. 🌐")
-    about.write("#### Powered by Langchain, OpenAI and Streamlit ChatBot-CSV offers a seamless and personalized experience. ⚡")
-    about.write("#### Source code : yvann-hub/ChatBot-CSV")
+    about.write("#### Powered by [Langchain]('https://github.com/hwchase17/langchain'), [OpenAI]('https://platform.openai.com/docs/models/gpt-3-5') and [Streamlit]('https://github.com/streamlit/streamlit') ChatBot-CSV offers a seamless and personalized experience. ⚡")
+    about.write("#### Source code : [yvann-hub/ChatBot-CSV](https://github.com/yvann-hub/ChatBot-CSV)")
 
 #Run the main function using asyncio
 if __name__ == "__main__":
