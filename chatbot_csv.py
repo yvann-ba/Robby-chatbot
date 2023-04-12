@@ -18,7 +18,7 @@ from langchain.chains.question_answering import load_qa_chain
 from langchain.chains.conversational_retrieval.prompts import CONDENSE_QUESTION_PROMPT
 
 # Set the Streamlit page configuration, including the layout and page title/icon
-st.set_page_config(layout="wide", page_icon="contents\logo_site.png", page_title="ChatBot-CSV")
+st.set_page_config(layout="wide", page_icon="🤖", page_title="ChatBot-CSV")
 
 # Display the header for the application using HTML markdown
 st.markdown(
@@ -90,10 +90,6 @@ async def main():
                     with open(filename + ".pkl", "wb") as f:
                         pickle.dump(vectors, f)
                     
-
-
-
-
                 # Define an asynchronous function for retrieving document embeddings
                 async def getDocEmbeds(file, filename):
                     
