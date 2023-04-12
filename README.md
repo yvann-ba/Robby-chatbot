@@ -44,8 +44,8 @@ Launch the chat service locally :
 
 #### That's it! The service is now up and running locally. 🤗
 
-Contributing
+## Contributing
 Contributions are always welcome! If you want to contribute to this project, please open an issue or submit a pull request.
 
-License
+## License
 This project is licensed under the MIT License - see the LICENSE file for details.
