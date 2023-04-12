@@ -80,23 +80,15 @@ async def main():
 
                 
             async def getDocEmbeds(file, filename):
-                if not os.path.isfile(filename + ".pkl") or os.path.getsize(filename + ".pkl") <= 0:
+                
+                if not os.path.isfile(filename + ".pkl"):
                     await storeDocEmbeds(file, filename)
-
+                
                 with open(filename + ".pkl", "rb") as f:
-                    try:
-                        serialized_data = pickle.load(f)
-                    except EOFError:
-                        # If the file is empty or corrupt, regenerate it
-                        await storeDocEmbeds(file, filename)
-                        with open(filename + ".pkl", "rb") as f:
-                            serialized_data = pickle.load(f)
-
-                # Deserialize data and reconstruct the vectors object
-                vectors = Chroma(vector_data=serialized_data['vector_data'], document_data=serialized_data['document_data'])
-
+                    global vectores
+                    vectors = pickle.load(f)
+                    
                 return vectors
-
             
 
             async def conversational_chat(query):
