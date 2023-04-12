@@ -13,7 +13,9 @@ from langchain.chains import ConversationalRetrievalChain
 from langchain.document_loaders.csv_loader import CSVLoader
 from langchain.prompts import PromptTemplate
 from langchain.vectorstores import FAISS
-from langchain.text_splitter import CharacterTextSplitter
+from langchain.chains import LLMChain
+from langchain.chains.question_answering import load_qa_chain
+from langchain.chains.conversational_retrieval.prompts import CONDENSE_QUESTION_PROMPT
 
 # Set the Streamlit page configuration, including the layout and page title/icon
 st.set_page_config(layout="wide", page_icon="contents\logo_site.png", page_title="Talk-Sheet")
@@ -44,7 +46,7 @@ async def main():
         os.environ["OPENAI_API_KEY"] = user_api_key
         
         # Allow the user to upload a CSV file
-        uploaded_file = st.sidebar.file_uploader("", type="csv", label_visibility="hidden")
+        uploaded_file = st.sidebar.file_uploader("upload", type="csv", label_visibility="hidden")
         
         # If the user has uploaded a file, display it in an expander
         if uploaded_file is not None:
@@ -74,23 +76,23 @@ async def main():
                         tmp_file_path = tmp_file.name
 
                     # Load the data from the CSV file using Langchain
-                    loader = CSVLoader(file_path=tmp_file_path, encoding="utf-8")
+                    loader = CSVLoader(file_path=tmp_file_path, encoding="utf-8", csv_args={'delimiter': ','})
                     data = loader.load()
-                    
-                    # Split the text into smaller chunks for easier processing
-                    splitter = CharacterTextSplitter(separator="\n",chunk_size=1500, chunk_overlap=0)
-                    chunks = splitter.split_documents(data)
-                    
+
                     # Create an embeddings object using Langchain
                     embeddings = OpenAIEmbeddings()
                     
                     # Store the embeddings vectors using FAISS
-                    vectors = FAISS.from_documents(chunks, embeddings)
+                    vectors = FAISS.from_documents(data, embeddings)
                     os.remove(tmp_file_path)
 
                     # Save the vectors to a pickle file
                     with open(filename + ".pkl", "wb") as f:
                         pickle.dump(vectors, f)
+                    
+
+
+
 
                 # Define an asynchronous function for retrieving document embeddings
                 async def getDocEmbeds(file, filename):
@@ -111,7 +113,7 @@ async def main():
                 async def conversational_chat(query):
                     
                     # Use the Langchain ConversationalRetrievalChain to generate a response to the user's query
-                    result = qa({"question": query, "chat_history": st.session_state['history']})
+                    result = chain({"question": query, "chat_history": st.session_state['history']})
                     
                     # Add the user's query and the chatbot's response to the chat history
                     st.session_state['history'].append((query, result["answer"]))
@@ -121,28 +123,6 @@ async def main():
                     print(st.session_state['history'])
                     
                     return result["answer"]
-
-                # Define a template for prompts to be used by the Langchain ConversationalRetrievalChain
-                prompt_template = (
-                "You are Talk-Sheet, a user-friendly chatbot designed to assist users by engaging in conversations based on data from CSV or Excel files. "
-                "Your knowledge comes from:"
-
-                "{context}"
-
-                "Help users by providing relevant information from the data in their files. Answer their questions accurately and concisely. "
-                "If the user's specific issue or need cannot be addressed with the available data, "
-                "empathize with their situation and suggest that they may need to seek assistance elsewhere. "
-                "Always maintain a friendly and helpful tone. "
-                "If you don't know the answer to a question, truthfully say you don't know."
-                "answers the user's question in the same language as the user"
-          
-                "Human: {question} "
-
-                "Talk-Sheet: "
-                )
-                
-                # Create a PromptTemplate object using the prompt_template defined above
-                PROMPT = PromptTemplate(template=prompt_template, input_variables=["context","question"])
 
                 # Set up sidebar with various options
                 with st.sidebar.expander("🛠️ Settings", expanded=False):
@@ -178,11 +158,10 @@ async def main():
                         
                         # Generate embeddings vectors for the file
                         vectors = await getDocEmbeds(file, uploaded_file.name)
-                        
+
                         # Use the Langchain ConversationalRetrievalChain to set up the chatbot
-                        qa = ConversationalRetrievalChain.from_llm(ChatOpenAI(model_name=MODEL), 
-                                                                   retriever=vectors.as_retriever(), 
-                                                                   qa_prompt=PROMPT,return_source_documents=False)
+                        chain = ConversationalRetrievalChain.from_llm(llm = ChatOpenAI(temperature=0.0,model_name=MODEL),retriever=vectors.as_retriever(), 
+                                                                   )
 
                     # Set the "ready" flag to True now that the chatbot is ready to chat
                     st.session_state['ready'] = True
@@ -215,8 +194,8 @@ async def main():
                             if st.session_state['reset_chat']:
                                 
                                 st.session_state['history'] = []
-                                st.session_state['past'] = ["Hey!"]
-                                st.session_state['generated'] = ["Welcome! You can now ask any questions regarding " + uploaded_file.name]
+                                st.session_state['past'] = ["Hey Talk-Sheet ! 👋"]
+                                st.session_state['generated'] = ["Hello ! Ask me anything about " + uploaded_file.name + " 🤗"]
                                 response_container.empty()
                                 st.session_state['reset_chat'] = False
 
@@ -239,8 +218,11 @@ async def main():
                             for i in range(len(st.session_state['generated'])):
                                 message(st.session_state["past"][i], is_user=True, key=str(i) + '_user', avatar_style="big-smile")
                                 message(st.session_state["generated"][i], key=str(i), avatar_style="thumbs")
+                #st.write(chain)
+
             except Exception as e:
                 st.error(f"Error: {str(e)}")
+
     # Create an expander for the "About" section
     about = st.sidebar.expander("About Talk-Sheet 🤖")
     
