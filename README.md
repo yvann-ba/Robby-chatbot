@@ -19,7 +19,7 @@ Follow these steps to set up and run the service locally :
 ### Installation
 Clone the repository :
 
-`git clone https://github.com/yvann-hubChatBot-CSV.git`
+`git clone https://github.com/yvann-hub/ChatBot-CSV.git`
 
 
 Navigate to the project directory :
