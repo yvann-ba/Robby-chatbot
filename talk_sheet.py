@@ -1,3 +1,4 @@
+import pickle
 import streamlit as st
 import pandas as pd
 import os
@@ -75,53 +76,60 @@ else:
         user_file_path = save_user_file(uploaded_file)
          
         # Create custom prompt for CSV chatbot
-        def adapt_llm_response_to_prompt():
-            prompt_template = (
-            "You are Talk-Sheet, a user-friendly chatbot designed to assist users by engaging in conversations based on data from CSV or Excel files. "
-            "Your knowledge comes from:"
 
-            " {context} "
+        prompt_template = (
+        "You are Talk-Sheet, a user-friendly chatbot designed to assist users by engaging in conversations based on data from CSV or Excel files. "
+        "Your knowledge comes from:"
 
-            "Help users by providing relevant information from the data in their files. Answer their questions accurately and concisely. "
-            "If the user's specific issue or need cannot be addressed with the available data, "
-            "empathize with their situation and suggest that they may need to seek assistance elsewhere. "
-            "Always maintain a friendly and helpful tone. "
-            "If you don't know the answer to a question, truthfully say you don't know."
+        " {context} "
 
-            "Human: {question} "
+        "Help users by providing relevant information from the data in their files. Answer their questions accurately and concisely. "
+        "If the user's specific issue or need cannot be addressed with the available data, "
+        "empathize with their situation and suggest that they may need to seek assistance elsewhere. "
+        "Always maintain a friendly and helpful tone. "
+        "If you don't know the answer to a question, truthfully say you don't know."
 
-            "Talk-Sheet: "
-            )
+        "Human: {question} "
 
-            PROMPT = PromptTemplate(template=prompt_template, input_variables=["context","question"])
-            chain_type_kwargs = {"prompt": PROMPT}
-            return chain_type_kwargs
+        "Talk-Sheet: "
+        )
+
+        PROMPT = PromptTemplate(template=prompt_template, input_variables=["context","question"])
+
         
-        custom_pompt = adapt_llm_response_to_prompt()
-        
-        try:
-            # Create retriever from user's CSV file
-            def formalize_user_file_for_llm(file_path_user):
-                loader = CSVLoader(file_path=file_path_user, encoding="utf-8")
-                data = loader.load()
-                text_splitter = CharacterTextSplitter(chunk_size=1500, chunk_overlap=0)
-                texts = text_splitter.split_documents(data)
 
-                embeddings = OpenAIEmbeddings()
-                
-                db = Chroma.from_documents(texts, embeddings)
-                retriever = db.as_retriever()
-                return retriever
+        # Create retriever from user's CSV file
+        async def store_csv_embeds(file_path_user, filename):
+            loader = CSVLoader(file_path=file_path_user, encoding="utf-8")
+            data = loader.load()
+            text_splitter = CharacterTextSplitter(chunk_size=1500, chunk_overlap=0)
+            texts = text_splitter.split_documents(data)
+
+            embeddings = OpenAIEmbeddings()
             
-            retriever_db = formalize_user_file_for_llm(user_file_path)
+            vectors = Chroma.from_documents(texts, embeddings)
             
-            async def conversational_chat(query):
-                result = qa({"question": query, "chat_history": st.session_state['history']})
-                st.session_state['history'].append((query, result["answer"]))
-                print("Log: ")
-                print(st.session_state['history'])
-                return result["answer"]
-            
+            with open(filename + ".pkl", "wb") as f:
+                pickle.dump(vectors, f)
+        
+        async def get_csv_embeds(file_path, filename):
+            if not os.path.isfile(filename + ".pkl"):
+                await store_csv_embeds(file_path, filename)
+
+            with open(filename + ".pkl", "rb") as f:
+                vectors = pickle.load(f)
+
+            return vectors
+
+
+        async def conversational_chat(query):
+            result = qa({"question": query, "chat_history": st.session_state['history']})
+            st.session_state['history'].append((query, result["answer"]))
+            print("Log: ")
+            print(st.session_state['history'])
+            return result["answer"]
+        
+        async def main(): 
             llm = ChatOpenAI(model_name="gpt-3.5-turbo")
             chain = load_qa_chain(llm, chain_type="stuff")
             
@@ -175,10 +183,9 @@ else:
                     for i in range(len(st.session_state['generated'])-1, -1, -1):
                         message(st.session_state["generated"][i], key=str(i))
                         message(st.session_state['past'][i], is_user=True, key=str(i) + '_user')
-                        
+                            
 
-        except Exception as e:
-            st.error(f"Error: {str(e)}")
+
 
 
 
