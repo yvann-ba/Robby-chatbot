@@ -8,7 +8,7 @@ To use ChatBot-CSV, simply visit the following link :
 
 [ChatBot-CSV.app](https://chatbot-csv.streamlit.app/)
 
-![alt text](https://drive.google.com/file/d/1lnHy5Yl6-TQDRkjcIeTxAE-gvI6idVzH/view?usp=sharing)
+![alt text](/ChatBot-CSV_screen.png)
 
 ## Running Locally 💻
 Follow these steps to set up and run the service locally :
