@@ -18,13 +18,15 @@ st.set_page_config(layout="wide", page_icon="💬", page_title="ChatBot-PDF")
 
 # Load the OpenAI API key from the .env file or from the user's input
 def load_api_key():
-    user_api_key = os.getenv("OPENAI_API_KEY")
-    if not user_api_key:
+    if os.path.exists(".env") and os.environ.get("OPENAI_API_KEY") is not None:
+        user_api_key = os.environ["OPENAI_API_KEY"]
+        st.sidebar.success("API key loaded from .env", icon="🚀")
+    else:
         user_api_key = st.sidebar.text_input(
             label="#### Your OpenAI API key 👇", placeholder="Paste your openAI API key, sk-", type="password"
         )
-    else:
-        st.sidebar.success("API key loaded from .env", icon="🚀")
+        if user_api_key:
+            st.sidebar.success("API key loaded", icon="🚀")
     return user_api_key
 
 
