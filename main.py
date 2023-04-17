@@ -163,7 +163,7 @@ async def main():
 
                         # Use the Langchain ConversationalRetrievalChain to set up the chatbot
                         chain = ConversationalRetrievalChain.from_llm(
-                            llm=ChatOpenAI(temperature=0.0, model_name=MODEL), retriever=vectors.as_retriever()
+                            llm=ChatOpenAI(temperature=TEMPERATURE, model_name=MODEL), retriever=vectors.as_retriever()
                         )
 
                     # Set the "ready" flag to True now that the chatbot is ready to chat
