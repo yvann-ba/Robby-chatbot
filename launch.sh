@@ -27,7 +27,7 @@ pip install --upgrade pip
 pip install -r $DIR/requirements.txt
 
 # Run program
-streamlit run $DIR/chatbot_csv.py
+streamlit run $DIR/main.py
 
 # Deactivate virtualenv
 deactivate
