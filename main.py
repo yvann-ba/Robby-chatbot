@@ -194,18 +194,20 @@ async def main():
                                 st.session_state["history"] = []
                                 st.session_state["past"] = ["Hey ! 👋"]
                                 st.session_state["generated"] = [
-                                    "Hello ! Ask me anything about " + uploaded_file.name + " 🤗"
+                                    "Hello ! Ask me anything about the document " + uploaded_file.name + " 🤗"
                                 ]
                                 response_container.empty()
                                 st.session_state["reset_chat"] = False
 
                         # If the user has submitted a query
                         if submit_button and user_input:
+                            # Add the user's input to the chat history
+                            st.session_state["past"].append(user_input)
+
                             # Generate a response using the Langchain ConversationalRetrievalChain
                             output = await conversational_chat(user_input)
 
-                            # Add the user's input and the chatbot's output to the chat history
-                            st.session_state["past"].append(user_input)
+                            # Add the user's chatbot's output to the chat history
                             st.session_state["generated"].append(output)
 
                     # If there are generated messages to display
