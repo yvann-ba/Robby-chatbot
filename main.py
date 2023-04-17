@@ -131,7 +131,10 @@ async def main():
                         st.session_state["reset_chat"] = True
 
                     # Allow the user to select a chatbot model to use
-                    MODEL = st.selectbox(label="Model", options=["gpt-3.5-turbo", "gpt-4"])
+                    MODEL = st.selectbox(label="Model", options=["gpt-3.5-turbo"])
+
+                    # Allow the user to change the model temperature
+                    TEMPERATURE = st.slider(label="Temperature", min_value=0.0, max_value=1.0, value=0.618, step=0.01)
 
                 # If the chat history has not yet been initialized, do so now
                 if "history" not in st.session_state:
