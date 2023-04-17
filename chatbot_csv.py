@@ -2,7 +2,6 @@ import os
 import pickle
 import streamlit as st
 import tempfile
-import pandas as pd
 import asyncio
 from dotenv import load_dotenv
 
@@ -58,9 +57,7 @@ async def main():
 
             def show_user_file(uploaded_file):
                 file_container = st.expander("Your PDF file :")
-                # pdf_reader = PyPDFLoader.load(uploaded_file)
-                title = "PDF TITLE"
-                file_container.write(f"Title: {title}")
+                file_container.write(uploaded_file)
 
             show_user_file(uploaded_file)
 
