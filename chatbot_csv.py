@@ -96,7 +96,7 @@ async def main():
                     
                     # Load the vectors from the pickle file
                     with open(filename + ".pkl", "rb") as f:
-                        global vectores
+                        global vectors
                         vectors = pickle.load(f)
                         
                     return vectors
