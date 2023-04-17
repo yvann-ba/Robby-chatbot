@@ -20,7 +20,7 @@ load_dotenv()
 st.set_page_config(layout="wide", page_icon="💬", page_title="ChatBot-PDF")
 
 # Display the header for the application using HTML markdown
-st.markdown("<h1 style='text-align: center;'>ChatBot-PDF, Talk with your  pdf-data ! 💬</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;'>ChatBot-PDF, Talk with your documents ! 💬</h1>", unsafe_allow_html=True)
 
 # Get the OpenAI API key from an environment variable if present
 user_api_key = os.getenv("OPENAI_API_KEY")
@@ -31,14 +31,12 @@ if not user_api_key:
         label="#### Your OpenAI API key 👇", placeholder="Paste your openAI API key, sk-", type="password"
     )
 else:
-    st.sidebar.write("API key loaded from env 🚀")
+    st.sidebar.success("API key loaded from .env", icon="🚀")
 
 
 async def main():
-
     # Check if the user has entered an OpenAI API key
     if user_api_key == "":
-
         # Display a message asking the user to enter their API key
         st.markdown(
             "<div style='text-align: center;'><h4>Enter your OpenAI API key to start chatting 😉</h4></div>",
@@ -50,7 +48,7 @@ async def main():
         os.environ["OPENAI_API_KEY"] = user_api_key
 
         # Allow the user to upload a file
-        uploaded_file = st.sidebar.file_uploader("upload", type="pdf", label_visibility="hidden")
+        uploaded_file = st.sidebar.file_uploader("upload", type="pdf", label_visibility="collapsed")
 
         # If the user has uploaded a file, display it in an expander
         if uploaded_file is not None:
@@ -72,7 +70,6 @@ async def main():
             try:
                 # Define an asynchronous function for storing document embeddings using Langchain and FAISS
                 async def storeDocEmbeds(file, filename):
-
                     # Write the uploaded file to a temporary file
                     with tempfile.NamedTemporaryFile(mode="wb", delete=False) as tmp_file:
                         tmp_file.write(file)
@@ -95,7 +92,6 @@ async def main():
 
                 # Define an asynchronous function for retrieving document embeddings
                 async def getDocEmbeds(file, filename):
-
                     # Check if embeddings vectors have already been stored in a pickle file
                     if not os.path.isfile(filename + ".pkl"):
                         # If not, store the vectors using the storeDocEmbeds function
@@ -110,7 +106,6 @@ async def main():
 
                 # Define an asynchronous function for conducting conversational chat using Langchain
                 async def conversational_chat(query):
-
                     # Use the Langchain ConversationalRetrievalChain to generate a response to the user's query
                     result = chain({"question": query, "chat_history": st.session_state["history"]})
 
@@ -125,7 +120,6 @@ async def main():
 
                 # Set up sidebar with various options
                 with st.sidebar.expander("🛠️ Settings", expanded=False):
-
                     # Add a button to reset the chat history
                     if st.button("Reset Chat"):
                         st.session_state["reset_chat"] = True
@@ -150,10 +144,8 @@ async def main():
 
                     # If a PDF file has been uploaded
                 if uploaded_file is not None:
-
                     # Display a spinner while processing the file
                     with st.spinner("Processing..."):
-
                         # Read the uploaded PDF file
                         uploaded_file.seek(0)
                         file = uploaded_file.read()
@@ -171,10 +163,11 @@ async def main():
 
                 # If the chatbot is ready to chat
                 if st.session_state["ready"]:
-
                     # If the chat history has not yet been initialized, initialize it now
                     if "generated" not in st.session_state:
-                        st.session_state["generated"] = ["Hello ! Ask me anything about " + uploaded_file.name + " 🤗"]
+                        st.session_state["generated"] = [
+                            "Hello ! Ask me anything about the document " + uploaded_file.name + " 🤗"
+                        ]
 
                     if "past" not in st.session_state:
                         st.session_state["past"] = ["Hey ! 👋"]
@@ -186,18 +179,18 @@ async def main():
                     container = st.container()
 
                     with container:
-
                         # Create a form for the user to enter their query
                         with st.form(key="my_form", clear_on_submit=True):
-
-                            user_input = st.text_input(
-                                "Query:", placeholder="Talk about your data here (:", key="input"
+                            user_input = st.text_area(
+                                "Query:",
+                                placeholder="Talk about your data here (:",
+                                key="input",
+                                label_visibility="collapsed",
                             )
                             submit_button = st.form_submit_button(label="Send")
 
                             # If the "reset_chat" flag has been set, reset the chat history and generated messages
                             if st.session_state["reset_chat"]:
-
                                 st.session_state["history"] = []
                                 st.session_state["past"] = ["Hey ! 👋"]
                                 st.session_state["generated"] = [
@@ -208,7 +201,6 @@ async def main():
 
                         # If the user has submitted a query
                         if submit_button and user_input:
-
                             # Generate a response using the Langchain ConversationalRetrievalChain
                             output = await conversational_chat(user_input)
 
@@ -218,10 +210,8 @@ async def main():
 
                     # If there are generated messages to display
                     if st.session_state["generated"]:
-
                         # Display the chat history
                         with response_container:
-
                             for i in range(len(st.session_state["generated"])):
                                 message(
                                     st.session_state["past"][i],
