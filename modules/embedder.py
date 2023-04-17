@@ -8,7 +8,15 @@ from langchain.embeddings.openai import OpenAIEmbeddings
 
 class Embedder:
     def __init__(self):
-        pass
+        self.PATH = "embeddings"
+        self.createEmbeddingsDir()
+
+    def createEmbeddingsDir(self):
+        """
+        Creates a directory to store the embeddings vectors
+        """
+        if not os.path.exists(self.PATH):
+            os.mkdir(self.PATH)
 
     async def storeDocEmbeds(self, file, filename):
         """
@@ -31,7 +39,7 @@ class Embedder:
         os.remove(tmp_file_path)
 
         # Save the vectors to a pickle file
-        with open(filename + ".pkl", "wb") as f:
+        with open(f"{self.PATH}/{filename}.pkl", "wb") as f:
             pickle.dump(vectors, f)
 
     async def getDocEmbeds(self, file, filename):
@@ -39,13 +47,12 @@ class Embedder:
         Retrieves document embeddings
         """
         # Check if embeddings vectors have already been stored in a pickle file
-        if not os.path.isfile(filename + ".pkl"):
+        if not os.path.isfile(f"{self.PATH}/{filename}.pkl"):
             # If not, store the vectors using the storeDocEmbeds function
             await self.storeDocEmbeds(file, filename)
 
         # Load the vectors from the pickle file
-        with open(filename + ".pkl", "rb") as f:
-            global vectors
+        with open(f"{self.PATH}/{filename}.pkl", "rb") as f:
             vectors = pickle.load(f)
 
         return vectors
