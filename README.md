@@ -11,7 +11,7 @@ To use ChatBot-CSV, simply visit the following link :
 Follow these steps to set up and run the service locally :
 
 ### Prerequisites
-- Python 3.7 or higher
+- Python 3.8 or higher
 - Git
 
 ### Installation
