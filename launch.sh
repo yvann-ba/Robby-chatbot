@@ -26,6 +26,9 @@ pip install --upgrade pip
 # Install dependencies
 pip install -r $DIR/requirements.txt
 
+# Clear terminal
+clear
+
 # Run program
 streamlit run $DIR/main.py
 
