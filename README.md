@@ -39,7 +39,7 @@ Install the required dependencies in the virtual environment :
 
 Launch the chat service locally :
 
-`streamlit run chatbot_csv.py`
+`streamlit run src/chatbot_csv.py`
 
 #### That's it! The service is now up and running locally. 🤗
 
