@@ -6,7 +6,7 @@
 ## Quick Start 🚀
 To use ChatBot-CSV, simply visit the following link :
 
-### In rework...
+### [ChatBot-CSV.app](https://chat-bot-csv.herokuapp.com/)
 
 ## Running Locally 💻
 Follow these steps to set up and run the service locally :
@@ -39,7 +39,7 @@ Install the required dependencies in the virtual environment :
 
 Launch the chat service locally :
 
-`streamlit run chatbot_csv.py`
+`streamlit run src/chatbot_csv.py`
 
 #### That's it! The service is now up and running locally. 🤗
 
