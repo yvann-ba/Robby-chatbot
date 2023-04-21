@@ -6,7 +6,7 @@
 ## Quick Start 🚀
 To use ChatBot-CSV, simply visit the following link :
 
-### [ChatBot-CSV](https://chat-bot-csv.herokuapp.com/)
+### [ChatBot-CSV.app](https://chat-bot-csv.herokuapp.com/)
 
 ## Running Locally 💻
 Follow these steps to set up and run the service locally :
