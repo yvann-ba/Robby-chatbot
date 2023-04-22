@@ -5,23 +5,21 @@ import tempfile
 import pandas as pd
 import asyncio
 
-# Import modules needed for building the chatbot application
 from streamlit_chat import message
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.chat_models import ChatOpenAI
 from langchain.chains import ConversationalRetrievalChain
 from langchain.document_loaders.csv_loader import CSVLoader
 from langchain.vectorstores import FAISS
+from langchain.prompts.prompt import PromptTemplate
 
-# Set the Streamlit page configuration, including the layout and page title/icon
+
 st.set_page_config(layout="wide", page_icon="💬", page_title="ChatBot-CSV")
 
-# Display the header for the application using HTML markdown
 st.markdown(
     "<h1 style='text-align: center;'>ChatBot-CSV, Talk with your  csv-data ! 💬</h1>",
     unsafe_allow_html=True)
 
-# Allow the user to enter their OpenAI API key
 user_api_key = st.sidebar.text_input(
     label="#### Your OpenAI API key 👇",
     placeholder="Paste your openAI API key, sk-",
@@ -29,22 +27,17 @@ user_api_key = st.sidebar.text_input(
 
 async def main():
     
-    # Check if the user has entered an OpenAI API key
     if user_api_key == "":
         
-        # Display a message asking the user to enter their API key
         st.markdown(
             "<div style='text-align: center;'><h4>Enter your OpenAI API key to start chatting 😉</h4></div>",
             unsafe_allow_html=True)
         
     else:
-        # Set the OpenAI API key as an environment variable
         os.environ["OPENAI_API_KEY"] = user_api_key
         
-        # Allow the user to upload a CSV file
         uploaded_file = st.sidebar.file_uploader("upload", type="csv", label_visibility="hidden")
         
-        # If the user has uploaded a file, display it in an expander
         if uploaded_file is not None:
             def show_user_file(uploaded_file):
                 file_container = st.expander("Your CSV file :")
@@ -54,7 +47,6 @@ async def main():
                 
             show_user_file(uploaded_file)
             
-        # If the user has not uploaded a file, display a message asking them to do so
         else :
             st.sidebar.info(
             "👆 Upload your CSV file to get started, "
@@ -63,7 +55,6 @@ async def main():
     
         if uploaded_file :
             try :
-                # Define an asynchronous function for storing document embeddings using Langchain and FAISS
                 async def storeDocEmbeds(file, filename):
                     
                     # Write the uploaded file to a temporary file
@@ -75,33 +66,26 @@ async def main():
                     loader = CSVLoader(file_path=tmp_file_path, encoding="utf-8")
                     data = loader.load()
 
-                    # Create an embeddings object using Langchain
                     embeddings = OpenAIEmbeddings()
                     
-                    # Store the embeddings vectors using FAISS
                     vectors = FAISS.from_documents(data, embeddings)
                     os.remove(tmp_file_path)
 
-                    # Save the vectors to a pickle file
                     with open(filename + ".pkl", "wb") as f:
                         pickle.dump(vectors, f)
                     
-                # Define an asynchronous function for retrieving document embeddings
                 async def getDocEmbeds(file, filename):
                     
-                    # Check if embeddings vectors have already been stored in a pickle file
                     if not os.path.isfile(filename + ".pkl"):
                         # If not, store the vectors using the storeDocEmbeds function
                         await storeDocEmbeds(file, filename)
                     
-                    # Load the vectors from the pickle file
                     with open(filename + ".pkl", "rb") as f:
                         #global vectors
                         vectors = pickle.load(f)
                         
                     return vectors
 
-                # Define an asynchronous function for conducting conversational chat using Langchain
                 async def conversational_chat(query):
                     
                     # Use the Langchain ConversationalRetrievalChain to generate a response to the user's query
@@ -110,9 +94,9 @@ async def main():
                     # Add the user's query and the chatbot's response to the chat history
                     st.session_state['history'].append((query, result["answer"]))
                     
-                    # Print the chat history for debugging purposes
-                    print("Log: ")
-                    print(st.session_state['history'])
+                    # You can print the chat history for debugging :
+                    #print("Log: ")
+                    #print(st.session_state['history'])
                     
                     return result["answer"]
 
@@ -126,39 +110,52 @@ async def main():
                     # Allow the user to select a chatbot model to use
                     MODEL = st.selectbox(label='Model', options=['gpt-3.5-turbo','gpt-4'])
 
-                # If the chat history has not yet been initialized, do so now
                 if 'history' not in st.session_state:
                     st.session_state['history'] = []
 
-                # If the chatbot is not yet ready to chat, set the "ready" flag to False
                 if 'ready' not in st.session_state:
                     st.session_state['ready'] = False
                     
-                # If the "reset_chat" flag has not been set, set it to False
                 if 'reset_chat' not in st.session_state:
                     st.session_state['reset_chat'] = False
                 
-                        # If a CSV file has been uploaded
                 if uploaded_file is not None:
 
                     # Display a spinner while processing the file
                     with st.spinner("Processing..."):
 
-                        # Read the uploaded CSV file
                         uploaded_file.seek(0)
                         file = uploaded_file.read()
                         
                         # Generate embeddings vectors for the file
                         vectors = await getDocEmbeds(file, uploaded_file.name)
 
-                        # Use the Langchain ConversationalRetrievalChain to set up the chatbot
+                        _template = """Given the following conversation and a follow-up question, rephrase the follow-up question to be a stand-alone question.
+                        You can assume that the question is about the information in a CSV file.
+                        Chat History:
+                        {chat_history}
+                        Follow-up entry: {question}
+                        Standalone question:"""
+                        CONDENSE_QUESTION_PROMPT = PromptTemplate.from_template(_template)
+
+                        qa_template = """"You are an AI conversational assistant to answer questions based on information from a csv file.
+                        You are given data from a csv file and a question, you must help the user find the information they need. 
+                        Only give responses for information you know about. Don't try to make up an answer.
+                        Your answers should be short and friendly.
+                        Respond to the user in the same language they are speaking to you in.
+                        question: {question}
+                        =========
+                        {context}
+                        =======
+                        """
+                        QA_PROMPT = PromptTemplate(template=qa_template, input_variables=["question", "context"])
+
                         chain = ConversationalRetrievalChain.from_llm(llm = ChatOpenAI(temperature=0.0,model_name=MODEL),
-                                                                      retriever=vectors.as_retriever())
+                                                                      condense_question_prompt=CONDENSE_QUESTION_PROMPT,qa_prompt=QA_PROMPT,retriever=vectors.as_retriever())
 
                     # Set the "ready" flag to True now that the chatbot is ready to chat
                     st.session_state['ready'] = True
 
-                # If the chatbot is ready to chat
                 if st.session_state['ready']:
 
                     # If the chat history has not yet been initialized, initialize it now
@@ -168,10 +165,10 @@ async def main():
                     if 'past' not in st.session_state:
                         st.session_state['past'] = ["Hey ! 👋"]
 
-                    # Create a container for displaying the chat history
+                    #container for displaying the chat history
                     response_container = st.container()
                     
-                    # Create a container for the user's text input
+                    #container for the user's text input
                     container = st.container()
 
                     with container:
@@ -191,7 +188,6 @@ async def main():
                                 response_container.empty()
                                 st.session_state['reset_chat'] = False
 
-                        # If the user has submitted a query
                         if submit_button and user_input:
                             
                             # Generate a response using the Langchain ConversationalRetrievalChain
@@ -201,7 +197,6 @@ async def main():
                             st.session_state['past'].append(user_input)
                             st.session_state['generated'].append(output)
 
-                    # If there are generated messages to display
                     if st.session_state['generated']:
                         
                         # Display the chat history
@@ -210,15 +205,12 @@ async def main():
                             for i in range(len(st.session_state['generated'])):
                                 message(st.session_state["past"][i], is_user=True, key=str(i) + '_user', avatar_style="big-smile")
                                 message(st.session_state["generated"][i], key=str(i), avatar_style="thumbs")
-                #st.write(chain)
+                
 
             except Exception as e:
                 st.error(f"Error: {str(e)}")
 
-    # Create an expander for the "About" section
     about = st.sidebar.expander("About 🤖")
-    
-    # Write information about the chatbot in the "About" section
     about.write("#### ChatBot-CSV is an AI chatbot featuring conversational memory, designed to enable users to discuss their CSV data in a more intuitive manner. 📄")
     about.write("#### He employs large language models to provide users with seamless, context-aware natural language interactions for a better understanding of their CSV data. 🌐")
     about.write("#### Powered by [Langchain](https://github.com/hwchase17/langchain), [OpenAI](https://platform.openai.com/docs/models/gpt-3-5) and [Streamlit](https://github.com/streamlit/streamlit) ⚡")
