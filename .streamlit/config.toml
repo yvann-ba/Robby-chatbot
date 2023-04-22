@@ -1,6 +1,4 @@
 [theme]
-base="light"
-primaryColor="#0098ff"
-
-[browser]
-gatherUsageStats = false
+base = "light"
+backgroundColor = "#FFF1F9"
+secondaryBackgroundColor = "#FFDCF1"
