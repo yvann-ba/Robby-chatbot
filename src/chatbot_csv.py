@@ -141,8 +141,7 @@ async def main():
                         qa_template = """"You are an AI conversational assistant to answer questions based on information from a csv file.
                         You are given data from a csv file and a question, you must help the user find the information they need. 
                         Only give responses for information you know about. Don't try to make up an answer.
-                        Your answers should be short and friendly.
-                        Respond to the user in the same language they are speaking to you in.
+                        Your answers should be short,friendly, in the same language.
                         question: {question}
                         =========
                         {context}
