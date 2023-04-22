@@ -1,7 +1,7 @@
 import os
 import pickle
 import tempfile
-from langchain.document_loaders import PyPDFLoader
+from langchain.document_loaders.csv_loader import CSVLoader
 from langchain.vectorstores import FAISS
 from langchain.embeddings.openai import OpenAIEmbeddings
 
@@ -28,7 +28,7 @@ class Embedder:
             tmp_file_path = tmp_file.name
 
         # Load the data from the file using Langchain
-        loader = PyPDFLoader(file_path=tmp_file_path)
+        loader = CSVLoader(file_path=tmp_file_path, encoding="utf-8")
         data = loader.load_and_split()
 
         # Create an embeddings object using Langchain
