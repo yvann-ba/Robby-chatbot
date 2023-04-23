@@ -18,7 +18,7 @@ class Embedder:
         if not os.path.exists(self.PATH):
             os.mkdir(self.PATH)
 
-    async def storeDocEmbeds(self, file, filename):
+    def storeDocEmbeds(self, file, filename):
         """
         Stores document embeddings using Langchain and FAISS
         """
@@ -42,14 +42,14 @@ class Embedder:
         with open(f"{self.PATH}/{filename}.pkl", "wb") as f:
             pickle.dump(vectors, f)
 
-    async def getDocEmbeds(self, file, filename):
+    def getDocEmbeds(self, file, filename):
         """
         Retrieves document embeddings
         """
         # Check if embeddings vectors have already been stored in a pickle file
         if not os.path.isfile(f"{self.PATH}/{filename}.pkl"):
             # If not, store the vectors using the storeDocEmbeds function
-            await self.storeDocEmbeds(file, filename)
+            self.storeDocEmbeds(file, filename)
 
         # Load the vectors from the pickle file
         with open(f"{self.PATH}/{filename}.pkl", "rb") as f:

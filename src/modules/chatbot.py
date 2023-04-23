@@ -29,7 +29,7 @@ class Chatbot:
         self.temperature = temperature
         self.vectors = vectors
 
-    async def conversational_chat(self, query):
+    def conversational_chat(self, query):
         """
         Starts a conversational chat with a model via Langchain
         """

@@ -13,7 +13,5 @@ def extra_chatbot_page():
         if agent :
             st.write(agent.run(query))
 
-if __name__ == "__main__":
-    extra_chatbot_page()
 
 
