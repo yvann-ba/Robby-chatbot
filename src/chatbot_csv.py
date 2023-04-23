@@ -3,12 +3,11 @@ import streamlit as st
 import asyncio
 from dotenv import load_dotenv
 
-
 from modules.history import ChatHistory
 from modules.layout import Layout
 from modules.utils import Utilities
 from modules.sidebar import Sidebar
-
+from csv_agent import extra_chatbot_page
 
 def init():
     load_dotenv()
@@ -16,6 +15,7 @@ def init():
 
 
 async def main():
+
     init()
     layout, sidebar, utils = Layout(), Sidebar(), Utilities()
     layout.show_header()
@@ -30,6 +30,8 @@ async def main():
         if uploaded_file:
             history = ChatHistory()
             sidebar.show_options()
+
+
 
             try:
                 chatbot = await utils.setup_chatbot(
@@ -56,9 +58,14 @@ async def main():
 
             except Exception as e:
                 st.error(f"Error: {str(e)}")
+        # Ajout du bouton pour naviguer vers la page du chatbot supplémentaire
+    if st.sidebar.button("Aller au chatbot supplémentaire"):
+        st.session_state["extra_chatbot"] = True
+        extra_chatbot_page()
 
     sidebar.about()
 
-
 if __name__ == "__main__":
+    if "page" not in st.session_state:
+        st.session_state.page = "main"
     asyncio.run(main())
