@@ -13,8 +13,7 @@ def init():
     load_dotenv()
     st.set_page_config(layout="wide", page_icon="💬", page_title="ChatBot-CSV")
 
-
-async def main():
+def main():
 
     init()
     layout, sidebar, utils = Layout(), Sidebar(), Utilities()
@@ -34,7 +33,7 @@ async def main():
 
 
             try:
-                chatbot = await utils.setup_chatbot(
+                chatbot = utils.setup_chatbot(
                     uploaded_file, st.session_state["model"], st.session_state["temperature"]
                 )
                 st.session_state["chatbot"] = chatbot
@@ -51,7 +50,7 @@ async def main():
 
                         if is_ready:
                             history.append("user", user_input)
-                            output = await st.session_state["chatbot"].conversational_chat(user_input)
+                            output = st.session_state["chatbot"].conversational_chat(user_input)
                             history.append("assistant", output)
 
                     history.generate_messages(response_container)
@@ -66,6 +65,4 @@ async def main():
     sidebar.about()
 
 if __name__ == "__main__":
-    if "page" not in st.session_state:
-        st.session_state.page = "main"
-    asyncio.run(main())
+    main()

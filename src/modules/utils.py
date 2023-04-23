@@ -48,7 +48,7 @@ class Utilities:
         return uploaded_file
 
     @staticmethod
-    async def setup_chatbot(uploaded_file, model, temperature):
+    def setup_chatbot(uploaded_file, model, temperature):
         """
         Sets up the chatbot with the uploaded file, model, and temperature
         """
@@ -56,7 +56,7 @@ class Utilities:
         with st.spinner("Processing..."):
             uploaded_file.seek(0)
             file = uploaded_file.read()
-            vectors = await embeds.getDocEmbeds(file, uploaded_file.name)
+            vectors = embeds.getDocEmbeds(file, uploaded_file.name)
             chatbot = Chatbot(model, temperature, vectors)
         st.session_state["ready"] = True
         return chatbot
