@@ -2,7 +2,7 @@ import streamlit as st
 
 
 class Sidebar:
-    MODEL_OPTIONS = ["gpt-3.5-turbo"]
+    MODEL_OPTIONS = ["gpt-3.5-turbo", "gpt-4"]
     TEMPERATURE_MIN_VALUE = 0.0
     TEMPERATURE_MAX_VALUE = 1.0
     TEMPERATURE_DEFAULT_VALUE = 0.0
@@ -39,11 +39,14 @@ class Sidebar:
             step=self.TEMPERATURE_STEP,
         )
         st.session_state["temperature"] = temperature
-
+    
     def show_options(self):
         with st.sidebar.expander("🛠️ Settings", expanded=False):
+
             self.reset_chat_button()
             self.model_selector()
             self.temperature_slider()
             st.session_state.setdefault("model", self.MODEL_OPTIONS[0])
             st.session_state.setdefault("temperature", self.TEMPERATURE_DEFAULT_VALUE)
+    
+

@@ -2,13 +2,14 @@ import streamlit as st
 
 
 class Layout:
+    
     def show_header(self):
         """
         Displays the header of the app
         """
         st.markdown(
             """
-            <h1 style='text-align: center;'>ChatBot-CSV, Talk with your  csv-data ! 💬</h1>
+            <h1 style='text-align: center;'>ChatBot-CSV, Talk with the content of your csv data! 💬</h1>
             """,
             unsafe_allow_html=True,
         )
@@ -38,5 +39,7 @@ class Layout:
                 label_visibility="collapsed",
             )
             submit_button = st.form_submit_button(label="Send")
+            
             is_ready = submit_button and user_input
         return is_ready, user_input
+    
