@@ -31,12 +31,14 @@ class Utilities:
         """
         uploaded_file = st.sidebar.file_uploader("upload", type="csv", label_visibility="collapsed")
         if uploaded_file is not None:
+            
 
             def show_user_file(uploaded_file):
                 file_container = st.expander("Your CSV file :")
                 shows = pd.read_csv(uploaded_file)
                 uploaded_file.seek(0)
                 file_container.write(shows)
+             
 
             show_user_file(uploaded_file)
         else:
