@@ -61,7 +61,7 @@ def main():
                     history.generate_messages(response_container)
                         
                     if st.session_state["show_csv_agent"]:
-                        query = st.text_input(label="Use CSV agent for precise information about the structure of your csv file")
+                        query = st.text_input(label="Use CSV agent for precise information about the structure of your csv file", placeholder="ex : how many rows in my file ?")
                         if query != "":
 
                             old_stdout = sys.stdout
