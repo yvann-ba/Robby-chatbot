@@ -1,11 +1,14 @@
 import os
 import streamlit as st
 from dotenv import load_dotenv
+from io import BytesIO
 
 from modules.history import ChatHistory
 from modules.layout import Layout
 from modules.utils import Utilities
 from modules.sidebar import Sidebar
+from langchain.agents import create_csv_agent
+from langchain.chat_models import ChatOpenAI
 
 def init():
     load_dotenv()
@@ -27,6 +30,8 @@ def main():
         if uploaded_file:
             history = ChatHistory()
             sidebar.show_options()
+
+            uploaded_file_content = BytesIO(uploaded_file.getvalue())
 
 
 
@@ -53,6 +58,11 @@ def main():
 
                     history.generate_messages(response_container)
 
+                if st.session_state["show_csv_agent"]:
+                    query = st.text_input(label="Use CSV agent for precise information about the CSV file itself")
+                    if query != "":
+                        agent = create_csv_agent(ChatOpenAI(temperature=0), uploaded_file_content, verbose=True)
+                        st.write(agent.run(query))
             except Exception as e:
                 st.error(f"Error: {str(e)}")
 

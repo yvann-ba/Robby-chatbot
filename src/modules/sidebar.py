@@ -1,6 +1,5 @@
 import streamlit as st
-from langchain.agents import create_csv_agent
-from langchain.chat_models import ChatOpenAI
+
 
 class Sidebar:
     MODEL_OPTIONS = ["gpt-3.5-turbo", "gpt-4"]
@@ -44,9 +43,7 @@ class Sidebar:
     def csv_agent_button(self):
         st.session_state.setdefault("show_csv_agent", False)
         if st.sidebar.button("CSV Agent"):
-            st.session_state["show_csv_agent"] = True
-        else:
-            st.session_state["show_csv_agent"] = False
+            st.session_state["show_csv_agent"] = not st.session_state["show_csv_agent"]
 
     def show_options(self):
         with st.sidebar.expander("🛠️ Tools", expanded=False):
