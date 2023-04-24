@@ -59,9 +59,9 @@ def main():
                     history.generate_messages(response_container)
 
                 if st.session_state["show_csv_agent"]:
-                    query = st.text_input(label="Use CSV agent for precise information about the CSV file itself")
+                    query = st.text_input(label="Use CSV agent for precise information about the structure of your csv file")
                     if query != "":
-                        agent = create_csv_agent(ChatOpenAI(temperature=0), uploaded_file_content, verbose=True)
+                        agent = create_csv_agent(ChatOpenAI(temperature=0), uploaded_file_content, verbose=True, max_iterations=4)
                         st.write(agent.run(query))
             except Exception as e:
                 st.error(f"Error: {str(e)}")
