@@ -8,6 +8,10 @@ To use ChatBot-CSV, simply visit the following link :
 
 ### [chatbot-csv.com](https://chatbot-csv.com/)
 
+## Coming Soon ⌛:
+- [ ] Implementation of CSV agent (enable precises responses on the csv file structure)
+- [ ] Custom prompt for the chatbot (let the user choose the behavior of the chatbot)
+
 ## Running Locally 💻
 Follow these steps to set up and run the service locally :
 
@@ -43,7 +47,7 @@ Launch the chat service locally :
 
 #### That's it! The service is now up and running locally. 🤗
 
-## Contributing
-Contributions are always welcome! If you want to contribute to this project, please open an issue or submit a pull request (:
+## Contributing 🙌
+Contributions are always welcome! If you want to contribute to this project, please open an issue, submit a pull request or contact me at barbot.yvann@gmail.com (:
 
 
