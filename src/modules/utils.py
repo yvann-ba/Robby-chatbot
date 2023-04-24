@@ -42,7 +42,7 @@ class Utilities:
         else:
             st.sidebar.info(
                 "👆 Upload your CSV file to get started, "
-                "sample for try : [fishfry-locations.csv](https://drive.google.com/file/d/18i7tN2CqrmoouaSqm3hDfAk17hmWx94e/view?usp=sharing)"
+                "sample for try : [fishfry-locations.csv](https://drive.google.com/file/d/1TpP3thVnTcDO1_lGSh99EKH2iF3GDE7_/view?usp=sharing)"
             )
             st.session_state["reset_chat"] = True
         return uploaded_file

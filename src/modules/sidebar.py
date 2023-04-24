@@ -1,5 +1,6 @@
 import streamlit as st
-
+from langchain.agents import create_csv_agent
+from langchain.chat_models import ChatOpenAI
 
 class Sidebar:
     MODEL_OPTIONS = ["gpt-3.5-turbo", "gpt-4"]
@@ -20,6 +21,7 @@ class Sidebar:
         for section in sections:
             about.write(section)
 
+
     @staticmethod
     def reset_chat_button():
         if st.button("Reset chat"):
@@ -39,14 +41,29 @@ class Sidebar:
             step=self.TEMPERATURE_STEP,
         )
         st.session_state["temperature"] = temperature
-    
+    def csv_agent_button(self):
+        st.session_state.setdefault("show_csv_agent", False)
+        if st.sidebar.button("CSV Agent"):
+            st.session_state["show_csv_agent"] = True
+        else:
+            st.session_state["show_csv_agent"] = False
+
     def show_options(self):
-        with st.sidebar.expander("🛠️ Settings", expanded=False):
+        with st.sidebar.expander("🛠️ Tools", expanded=False):
 
             self.reset_chat_button()
+            self.csv_agent_button()
             self.model_selector()
             self.temperature_slider()
             st.session_state.setdefault("model", self.MODEL_OPTIONS[0])
             st.session_state.setdefault("temperature", self.TEMPERATURE_DEFAULT_VALUE)
     
 
+"""    def csv_agent(self, ):
+            # Ajout du bouton pour naviguer vers la page du chatbot supplémentaire
+        if csv_agent_button = st.sidebar.button("CSV Agent"):
+            query = st.text_input(label="Use CSV agent for precise informations about the csv file itself")
+
+            if query != "" :
+                agent = create_csv_agent(ChatOpenAI(temperature=0), 'poto-associations-sample.csv', verbose=True)
+                st.write(agent.run(query))"""
