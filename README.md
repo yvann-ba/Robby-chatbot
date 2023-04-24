@@ -1,15 +1,15 @@
 # ChatBot-CSV 🤖
 
 ### An AI chatbot featuring conversational memory, designed to enable users to discuss their CSV data in a more intuitive manner. 📄
-#### By integrating the strengths of Langchain and OpenAI, ChatBot-CSV employs large language models to provide users with seamless, context-aware natural language interactions for a better understanding of their CSV data.🧠
+By integrating the strengths of Langchain and OpenAI, ChatBot-CSV employs large language models to provide users with seamless, context-aware natural language interactions for a better understanding of their CSV data.🧠
 #### For better understanding, see my medium article 🖖 : [Build a chat-bot over your CSV data](https://medium.com/@yvann-ba/build-a-chatbot-on-your-csv-data-with-langchain-and-openai-ed121f85f0cd)
 ## Quick Start 🚀
 To use ChatBot-CSV, simply visit the following link :
 
 ### [chatbot-csv.com](https://chatbot-csv.com/)
 
-## Coming Soon ⌛:
-- [ ] Implementation of CSV agent (enable precises responses on the csv file structure)
+## Task List 📝:
+- [x] Implementation of CSV agent (enable precises responses on the csv file structure)
 - [ ] Custom prompt for the chatbot (let the user choose the behavior of the chatbot)
 
 ## Running Locally 💻
