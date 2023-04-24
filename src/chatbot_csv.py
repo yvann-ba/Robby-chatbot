@@ -2,7 +2,9 @@ import os
 import streamlit as st
 from dotenv import load_dotenv
 from io import BytesIO
-
+from io import StringIO
+import sys
+import re
 from modules.history import ChatHistory
 from modules.layout import Layout
 from modules.utils import Utilities
@@ -57,12 +59,38 @@ def main():
                             history.append("assistant", output)
 
                     history.generate_messages(response_container)
+                        
+                    if st.session_state["show_csv_agent"]:
+                        query = st.text_input(label="Use CSV agent for precise information about the structure of your csv file")
+                        if query != "":
+                            
+                            # Redirigez temporairement la sortie standard vers un objet StringIO
+                            old_stdout = sys.stdout
+                            sys.stdout = captured_output = StringIO()
 
-                if st.session_state["show_csv_agent"]:
-                    query = st.text_input(label="Use CSV agent for precise information about the structure of your csv file")
-                    if query != "":
-                        agent = create_csv_agent(ChatOpenAI(temperature=0), uploaded_file_content, verbose=True, max_iterations=4)
-                        st.write(agent.run(query))
+                            # Exécutez create_csv_agent et capturez la sortie
+                            agent = create_csv_agent(ChatOpenAI(temperature=0), uploaded_file_content, verbose=True, max_iterations=4)
+
+                            # Exécutez la méthode agent.run(query) et capturez la sortie
+                            result = agent.run(query)
+
+                            # Restaurez la sortie standard
+                            sys.stdout = old_stdout
+
+                            # Récupérez les pensées capturées
+                            thoughts = captured_output.getvalue()
+
+                            # Utilisez des expressions régulières pour supprimer les caractères et les séquences indésirables
+                            cleaned_thoughts = re.sub(r'\x1b\[[0-9;]*[a-zA-Z]', '', thoughts)  # Supprime les séquences d'échappement ANSI
+                            cleaned_thoughts = re.sub(r'\[1m>', '', cleaned_thoughts)          # Supprime les parties indésirables comme '[1m>'
+
+                            # Affichez les pensées nettoyées dans un expander
+                            with st.expander("Afficher les pensées de l'agent"):
+                                st.write(cleaned_thoughts)
+
+                            # Affichez le résultat de create_csv_agent
+                            st.write(result)
+
             except Exception as e:
                 st.error(f"Error: {str(e)}")
 
