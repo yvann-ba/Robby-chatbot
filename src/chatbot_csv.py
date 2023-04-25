@@ -5,12 +5,32 @@ from io import BytesIO
 from io import StringIO
 import sys
 import re
+from langchain.agents import create_csv_agent
+from langchain.chat_models import ChatOpenAI
 from modules.history import ChatHistory
 from modules.layout import Layout
 from modules.utils import Utilities
 from modules.sidebar import Sidebar
-from langchain.agents import create_csv_agent
-from langchain.chat_models import ChatOpenAI
+
+#To be able to update the changes made to modules in localhost,
+#you can press the "r" key on the localhost page to refresh and reflect the changes made to the module files.
+def reload_module(module_name):
+    import importlib
+    import sys
+    if module_name in sys.modules:
+        importlib.reload(sys.modules[module_name])
+    return sys.modules[module_name]
+
+history_module = reload_module('modules.history')
+layout_module = reload_module('modules.layout')
+utils_module = reload_module('modules.utils')
+sidebar_module = reload_module('modules.sidebar')
+
+ChatHistory = history_module.ChatHistory
+Layout = layout_module.Layout
+Utilities = utils_module.Utilities
+Sidebar = sidebar_module.Sidebar
+
 
 def init():
     load_dotenv()
@@ -34,8 +54,6 @@ def main():
             sidebar.show_options()
 
             uploaded_file_content = BytesIO(uploaded_file.getvalue())
-
-
 
             try:
                 chatbot = utils.setup_chatbot(
@@ -83,7 +101,6 @@ def main():
 
             except Exception as e:
                 st.error(f"Error: {str(e)}")
-
 
     sidebar.about()
 
