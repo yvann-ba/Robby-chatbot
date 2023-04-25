@@ -1,4 +1,4 @@
-#pip install streamlit langchain openai fais-cpu tiktoken
+#pip install streamlit langchain openai faiss-cpu tiktoken
 
 import streamlit as st
 from streamlit_chat import message
