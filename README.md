@@ -10,7 +10,7 @@ To use ChatBot-CSV, simply visit the following link :
 
 ## Task List 📝:
 - [x] Implementation of CSV agent (enable precises responses on the csv file structure)
-- [ ] Load multiples csv file in the same chatbot
+- [ ] Load multiples csv files in the  chatbot
 - [ ] Custom prompt for the chatbot (let the user choose the behavior of the chatbot)
 - [ ] Rebuild the site in typescript instead of streamlit
 - [ ] add a database and a login for the user to have a permanent chatbot on these csv data
