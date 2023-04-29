@@ -14,7 +14,7 @@ class Sidebar:
         sections = [
             "#### ChatBot-CSV is an AI chatbot featuring conversational memory, designed to enable users to discuss their CSV data in a more intuitive manner. 📄",
             "#### He employs large language models to provide users with seamless, context-aware natural language interactions for a better understanding of their CSV data. 🌐",
-            "#### For more information on the differences and specifics between ChatBot and CSVagent, check out the read-me on GitHub 🙌"
+            "#### For more information on the differences and specifics between ChatBot and CSVagent, check out the read-me on GitHub 🙌 "
             "#### Powered by [Langchain](https://github.com/hwchase17/langchain), [OpenAI](https://platform.openai.com/docs/models/gpt-3-5) and [Streamlit](https://github.com/streamlit/streamlit) ⚡",
             "#### Source code : [yvann-hub/ChatBot-CSV](https://github.com/yvann-hub/ChatBot-CSV)",
         ]
