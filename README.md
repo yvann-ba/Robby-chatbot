@@ -8,12 +8,19 @@ To use ChatBot-CSV, simply visit the following link :
 
 ### [chatbot-csv.com](https://chatbot-csv.com/)
 
-## Task List 📝:
-- [x] Implementation of CSV agent (enable precises responses on the csv file structure)
-- [ ] Load multiples csv files in the  chatbot
-- [ ] Custom prompt for the chatbot (let the user choose the behavior of the chatbot)
-- [ ] Rebuild the site in typescript instead of streamlit
-- [ ] add a database and a login for the user to have a permanent chatbot on these csv data
+## Information 📝:
+ChatBot-CSV features a chatbot with memory and a CSV agent. The chatbot is specialized in discussing unique elements within the CSV with the user in a friendly and conversational manner (limited to about 4 rows at a time due to the nature of the ConversationalRetrievalChain). It is more suitable for a use case where a company uses a CSV to feed their chatbot, so it can answer questions from a user seeking information without necessarily knowing the data behind the chatbot. You can modify the prompt template in the code to customize the chatbot's response phrasing for your specific case.
+
+Example:
+Q: I'm looking for a restaurant in New York, what do you suggest?
+A: You can try Tower Restaurant, which offers an à la carte menu and has promotions on Tuesdays. You can contact them at 0654589874 for more information.
+
+The CSV Agent, on the other hand, executes Python to answer questions about the content and structure of the CSV. It requires precise questions about the data and provides factual answers. It is not limited to a specific number of rows and can analyze the entire file, but it needs clear and accurate instructions. It also doesn't have memory.
+
+Example:
+Q: What's the square root of the average age?
+A: '5.449689683556195'
+
 ## Running Locally 💻
 Follow these steps to set up and run the service locally :
 
