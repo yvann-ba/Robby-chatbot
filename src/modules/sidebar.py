@@ -56,12 +56,3 @@ class Sidebar:
             st.session_state.setdefault("model", self.MODEL_OPTIONS[0])
             st.session_state.setdefault("temperature", self.TEMPERATURE_DEFAULT_VALUE)
     
-
-"""    def csv_agent(self, ):
-            # Ajout du bouton pour naviguer vers la page du chatbot supplémentaire
-        if csv_agent_button = st.sidebar.button("CSV Agent"):
-            query = st.text_input(label="Use CSV agent for precise informations about the csv file itself")
-
-            if query != "" :
-                agent = create_csv_agent(ChatOpenAI(temperature=0), 'poto-associations-sample.csv', verbose=True)
-                st.write(agent.run(query))"""
