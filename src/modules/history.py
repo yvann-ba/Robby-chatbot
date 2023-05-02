@@ -55,3 +55,5 @@ class ChatHistory:
     def save(self):
         with open(self.history_file, "w") as f:
             f.write("\n".join(self.history))
+
+
