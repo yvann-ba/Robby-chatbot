@@ -4,7 +4,6 @@ import streamlit as st
 
 from modules.chatbot import Chatbot
 from modules.embedder import Embedder
-from langchain.callbacks import get_openai_callback
 
 
 class Utilities:
@@ -63,11 +62,3 @@ class Utilities:
             chatbot = Chatbot(model, temperature, vectors)
         st.session_state["ready"] = True
         return chatbot
-
-    def count_tokens_agent(agent, query):
-        with get_openai_callback() as cb:
-            result = agent(query)
-            st.write(f'Spent a total of {cb.total_tokens} tokens')
-
-        return result
-    
