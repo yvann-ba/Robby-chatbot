@@ -11,6 +11,7 @@ from modules.history import ChatHistory
 from modules.layout import Layout
 from modules.utils import Utilities
 from modules.sidebar import Sidebar
+from modules.chatbot import Chatbot
 
 #To be able to update the changes made to modules in localhost,
 #you can press the "r" key on the localhost page to refresh and reflect the changes made to the module files.
@@ -21,11 +22,13 @@ def reload_module(module_name):
         importlib.reload(sys.modules[module_name])
     return sys.modules[module_name]
 
+chatbot_module = reload_module('modules.chatbot')
 history_module = reload_module('modules.history')
 layout_module = reload_module('modules.layout')
 utils_module = reload_module('modules.utils')
 sidebar_module = reload_module('modules.sidebar')
 
+Chatbot = chatbot_module.Chatbot
 ChatHistory = history_module.ChatHistory
 Layout = layout_module.Layout
 Utilities = utils_module.Utilities
@@ -53,7 +56,6 @@ def main():
             history = ChatHistory()
             sidebar.show_options()
 
-            uploaded_file_content = BytesIO(uploaded_file.getvalue())
 
             try:
                 chatbot = utils.setup_chatbot(
@@ -75,12 +77,13 @@ def main():
                             history.append("user", user_input)
                             output = st.session_state["chatbot"].conversational_chat(user_input)
                             history.append("assistant", output)
-
                     history.generate_messages(response_container)
-                        
+
+                    #CSV Agent part
                     if st.session_state["show_csv_agent"]:
                         query = st.text_input(label="Use CSV agent for precise information about the structure of your csv file", placeholder="ex : how many rows in my file ?")
                         if query != "":
+                            uploaded_file_content = BytesIO(uploaded_file.getvalue())
 
                             old_stdout = sys.stdout
                             sys.stdout = captured_output = StringIO()
@@ -94,8 +97,10 @@ def main():
                             cleaned_thoughts = re.sub(r'\x1b\[[0-9;]*[a-zA-Z]', '', thoughts)
                             cleaned_thoughts = re.sub(r'\[1m>', '', cleaned_thoughts)
 
-                            with st.expander("Afficher les pensées de l'agent"):
+                            with st.expander("Display the agent's thoughts"):
                                 st.write(cleaned_thoughts)
+                                
+                                Utilities.count_tokens_agent(agent, query) #count and print numbers of tokens used
 
                             st.write(result)
 
