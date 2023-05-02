@@ -3,7 +3,7 @@ from langchain.chat_models import ChatOpenAI
 from langchain.chains import ConversationalRetrievalChain
 from langchain.prompts.prompt import PromptTemplate
 from langchain.callbacks import get_openai_callback
-#test
+
 def count_tokens_chain(chain, query):
     with get_openai_callback() as cb:
         result = chain.run(query)
