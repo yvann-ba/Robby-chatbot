@@ -8,6 +8,9 @@ To use ChatBot-CSV, simply visit the following link :
 
 ### [chatbot-csv.com](https://chatbot-csv.com/)
 
+### TO-DO :
+- [x] print tokens utilizations for the conversation
+- [ ] Replace chain of the chatbot by a custom agent for handling more features ans ask questions about all informations of the files + memory + vectorstore
 ## Running Locally 💻
 Follow these steps to set up and run the service locally :
 
