@@ -46,8 +46,8 @@ class Chatbot:
             llm = ChatOpenAI(model_name=self.model_name, temperature=self.temperature)
             chain = ConversationalRetrievalChain.from_llm(
                 llm=llm,
-                #condense_question_prompt=self.CONDENSE_QUESTION_PROMPT,
-                #qa_prompt=self.QA_PROMPT,
+                condense_question_prompt=self.CONDENSE_QUESTION_PROMPT,
+                qa_prompt=self.QA_PROMPT,
                 retriever=self.vectors.as_retriever(),
             )
 
