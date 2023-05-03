@@ -7,7 +7,7 @@ from langchain.callbacks import get_openai_callback
 def count_tokens_chain(chain, query):
     with get_openai_callback() as cb:
         result = chain.run(query)
-        st.write(f'Spent a total of {cb.total_tokens} tokens')
+        st.write(f'###### Tokens used in this conversation : {cb.total_tokens} tokens')
 
         
 
