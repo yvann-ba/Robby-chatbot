@@ -1,12 +1,12 @@
-# ChatBot-CSV 🤖
+# Robby-chatbot 🤖
 
 ### An AI chatbot featuring conversational memory, designed to enable users to discuss their CSV and PDF data in a more intuitive manner. 📄
-By integrating the strengths of Langchain and OpenAI, ChatBot-CSV employs large language models to provide users with seamless, context-aware natural language interactions for a better understanding of their PDF and CSV data.🧠
+By integrating the strengths of Langchain and OpenAI, Robby-chatbot employs large language models to provide users with seamless, context-aware natural language interactions for a better understanding of their PDF and CSV data.🧠
 #### For better understanding, see my medium article 🖖 : [Build a chat-bot over your CSV data](https://medium.com/@yvann-ba/build-a-chatbot-on-your-csv-data-with-langchain-and-openai-ed121f85f0cd)
 ## Quick Start 🚀
-To use ChatBot-CSV, simply visit the following link :
+To use Robby-chatbot, simply visit the following link :
 
-### [chatbot-csv.com](https://chatbot-csv.com/)
+### [Robby-chatbot.com](https://chatbot-csv.com/)
 
 ### TO-DO :
 - [x] print tokens utilizations for the conversation
@@ -14,6 +14,7 @@ To use ChatBot-CSV, simply visit the following link :
 - [ ] Add lots of files accepted like GitHub repo, Excel etc...
 - [ ] Add free models like vicuna and free embeddings
 - [ ] Replace chain of the chatbot by a custom agent for handling more features ans ask questions about all informations of the files + memory + vectorstore
+
 ## Running Locally 💻
 Follow these steps to set up and run the service locally :
 
@@ -24,12 +25,12 @@ Follow these steps to set up and run the service locally :
 ### Installation
 Clone the repository :
 
-`git clone https://github.com/yvann-hub/ChatBot-CSV.git`
+`git clone https://github.com/yvann-hub/Robby-chatbot.git`
 
 
 Navigate to the project directory :
 
-`cd ChatBot-CSV`
+`cd Robby-chatbot`
 
 
 Create a virtual environment :
@@ -45,12 +46,12 @@ Install the required dependencies in the virtual environment :
 
 Launch the chat service locally :
 
-`streamlit run src/chatbot_csv.py`
+`streamlit run src/robby_chatbot.py`
 
 #### That's it! The service is now up and running locally. 🤗
 
 ## Information 📝:
-ChatBot-CSV features a chatbot with memory and a CSV agent. The chatbot is specialized in discussing unique elements within the CSV with the user in a friendly and conversational manner (limited to about 4 rows at a time due to the nature of the ConversationalRetrievalChain). It is more suitable for a use case where a company uses a CSV to feed their chatbot, so it can answer questions from a user seeking information without necessarily knowing the data behind the chatbot. You can modify the prompt template in the code to customize the chatbot's response phrasing for your specific case.
+Robby-chatbot features a chatbot with memory and a CSV agent. The chatbot is specialized in discussing unique elements within the CSV with the user in a friendly and conversational manner (limited to about 4 rows at a time due to the nature of the ConversationalRetrievalChain). It is more suitable for a use case where a company uses a CSV to feed their chatbot, so it can answer questions from a user seeking information without necessarily knowing the data behind the chatbot. You can modify the prompt template in the code to customize the chatbot's response phrasing for your specific case.
 
 Example:
 Q: I'm looking for a restaurant in New York, what do you suggest?
