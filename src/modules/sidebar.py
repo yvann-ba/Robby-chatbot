@@ -10,13 +10,13 @@ class Sidebar:
 
     @staticmethod
     def about():
-        about = st.sidebar.expander("About 🤖")
+        about = st.sidebar.expander("🧠 About Robby ")
         sections = [
-            "#### ChatBot-CSV is an AI chatbot featuring conversational memory, designed to enable users to discuss their data in a more intuitive manner. 📄",
-            "#### He employs large language models to provide users with seamless, context-aware natural language interactions for a better understanding of their data. 🌐",
-            "#### Work with CSV and PDF files, more soon...",
+            "#### Robby is an AI chatbot with a conversational memory, designed to allow users to discuss their data in a more intuitive way. 📄",
+            "#### It uses large language models to provide users with natural language interactions about user data content. 🌐",
+            "#### Works with CSV and PDF files, more soon...",
             "#### Powered by [Langchain](https://github.com/hwchase17/langchain), [OpenAI](https://platform.openai.com/docs/models/gpt-3-5) and [Streamlit](https://github.com/streamlit/streamlit) ⚡",
-            "#### Source code : [yvann-hub/ChatBot-CSV](https://github.com/yvann-hub/ChatBot-CSV)",
+            "#### Source code: [yvann-hub/Robby-chatbot](https://github.com/yvann-hub/Robby-chatbot)",
         ]
         for section in sections:
             about.write(section)
@@ -49,7 +49,7 @@ class Sidebar:
                 st.session_state["show_csv_agent"] = not st.session_state["show_csv_agent"]
 
     def show_options(self, uploaded_file):
-        with st.sidebar.expander("🛠️ Tools", expanded=False):
+        with st.sidebar.expander("🛠️ Robby's Tools", expanded=False):
 
             self.reset_chat_button()
             self.csv_agent_button(uploaded_file)
