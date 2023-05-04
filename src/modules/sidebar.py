@@ -1,5 +1,5 @@
 import streamlit as st
-
+import os
 
 class Sidebar:
     MODEL_OPTIONS = ["gpt-3.5-turbo", "gpt-4"]
@@ -12,9 +12,9 @@ class Sidebar:
     def about():
         about = st.sidebar.expander("About 🤖")
         sections = [
-            "#### ChatBot-CSV is an AI chatbot featuring conversational memory, designed to enable users to discuss their CSV data in a more intuitive manner. 📄",
-            "#### He employs large language models to provide users with seamless, context-aware natural language interactions for a better understanding of their CSV data. 🌐",
-            "#### For more information on the differences and specifics between ChatBot and CSVagent, check out the read-me on GitHub 🙌 ",
+            "#### ChatBot-CSV is an AI chatbot featuring conversational memory, designed to enable users to discuss their data in a more intuitive manner. 📄",
+            "#### He employs large language models to provide users with seamless, context-aware natural language interactions for a better understanding of their data. 🌐",
+            "#### Work with CSV and PDF files, more soon...",
             "#### Powered by [Langchain](https://github.com/hwchase17/langchain), [OpenAI](https://platform.openai.com/docs/models/gpt-3-5) and [Streamlit](https://github.com/streamlit/streamlit) ⚡",
             "#### Source code : [yvann-hub/ChatBot-CSV](https://github.com/yvann-hub/ChatBot-CSV)",
         ]
@@ -41,18 +41,21 @@ class Sidebar:
             step=self.TEMPERATURE_STEP,
         )
         st.session_state["temperature"] = temperature
-    def csv_agent_button(self):
+    def csv_agent_button(self, uploaded_file):
         st.session_state.setdefault("show_csv_agent", False)
-        if st.sidebar.button("CSV Agent"):
-            st.session_state["show_csv_agent"] = not st.session_state["show_csv_agent"]
+        
+        if uploaded_file and os.path.splitext(uploaded_file.name)[1].lower() == ".csv":
+            if st.sidebar.button("CSV Agent"):
+                st.session_state["show_csv_agent"] = not st.session_state["show_csv_agent"]
 
-    def show_options(self):
+    def show_options(self, uploaded_file):
         with st.sidebar.expander("🛠️ Tools", expanded=False):
 
             self.reset_chat_button()
-            self.csv_agent_button()
+            self.csv_agent_button(uploaded_file)
             self.model_selector()
             self.temperature_slider()
             st.session_state.setdefault("model", self.MODEL_OPTIONS[0])
             st.session_state.setdefault("temperature", self.TEMPERATURE_DEFAULT_VALUE)
+
     
