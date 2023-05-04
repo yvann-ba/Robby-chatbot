@@ -21,9 +21,9 @@ class Chatbot:
 
     CONDENSE_QUESTION_PROMPT = PromptTemplate.from_template(_template)
 
-    qa_template = """"You are an AI conversational assistant to answer questions based on a context.
-    You are given data from a csv file and a question, you must help the user find the information they need. 
-    Your answers should be friendly, response to the user in his own language.
+    qa_template = """"You are a conversational assistant that answers questions and chats with the user from a context file.
+    You receive data from a file from the user and a question, you have to help the user find the information he needs. 
+    Your answers must be user-friendly, answering the user in the language they speak to you.
     question: {question}
     =========
     context: {context}
@@ -55,7 +55,7 @@ class Chatbot:
             result = chain(chain_input)
 
             st.session_state["history"].append((query, result["answer"]))
-            count_tokens_chain(chain, chain_input)
+            #count_tokens_chain(chain, chain_input)
             return result["answer"]
 
 

@@ -53,13 +53,14 @@ def main():
         uploaded_file = utils.handle_upload()
 
         if uploaded_file:
+
             history = ChatHistory()
-            sidebar.show_options()
+            sidebar.show_options(uploaded_file)
 
 
             try:
                 chatbot = utils.setup_chatbot(
-                    uploaded_file, st.session_state["model"], st.session_state["temperature"]
+                    uploaded_file,st.session_state["model"], st.session_state["temperature"]
                 )
                 st.session_state["chatbot"] = chatbot
 

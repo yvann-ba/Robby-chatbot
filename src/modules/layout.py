@@ -9,7 +9,7 @@ class Layout:
         """
         st.markdown(
             """
-            <h1 style='text-align: center;'>ChatBot-CSV, Talk with your csv data! 💬</h1>
+            <h1 style='text-align: center;'> Talk with your PDF and CSV files ! 💬</h1>
             """,
             unsafe_allow_html=True,
         )
