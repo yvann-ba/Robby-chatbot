@@ -9,7 +9,7 @@ class Layout:
         """
         st.markdown(
             """
-            <h1 style='text-align: center;'> Talk with your PDF and CSV files ! 💬</h1>
+            <h1 style='text-align: center;'> Talk with Robby about your file ! 😁</h1>
             """,
             unsafe_allow_html=True,
         )
