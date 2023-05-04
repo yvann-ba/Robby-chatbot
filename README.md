@@ -9,7 +9,7 @@ To use Robby-chatbot, simply visit the following link :
 ### [Robby-chatbot.com](https://chatbot-csv.com/)
 
 ### TO-DO :
-- [x] print tokens utilizations for the conversation
+- [x] enable print tokens utilizations for the conversation
 - [x] Chatbot on PDF files (I need to change the name of the repo haha)
 - [ ] Add lots of files accepted like GitHub repo, Excel etc...
 - [ ] Add free models like vicuna and free embeddings
