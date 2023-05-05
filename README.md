@@ -9,7 +9,7 @@ Robby the Robot from [Forbidden Planet](https://youtu.be/bflfQN_YsTM)
 ## Quick Start 🚀
 To use Robby-chatbot, simply visit the following link :
 
-### [Robby-chatbot.com](https://chatbot-csv.com/)
+### [robby-chatbot.com](https://robby-chatbot.com)
 
 ### TO-DO :
 - [x] enable print tokens utilizations for the conversation
@@ -53,18 +53,17 @@ Launch the chat service locally :
 
 #### That's it! The service is now up and running locally. 🤗
 
-## Information 📝:
-Robby-chatbot features a chatbot with memory and a CSV agent. The chatbot is specialized in discussing unique elements within the CSV with the user in a friendly and conversational manner (limited to about 4 rows at a time due to the nature of the ConversationalRetrievalChain). It is more suitable for a use case where a company uses a CSV to feed their chatbot, so it can answer questions from a user seeking information without necessarily knowing the data behind the chatbot. You can modify the prompt template in the code to customize the chatbot's response phrasing for your specific case.
+Robby-chatbot contains a chatbot with memory for differents types of files and a CSV-agent, both based on a given file. The chatbot discusses the elements of the file with the user in a user-friendly way from a vectorstore (max. 4 indexes at a time). 
 
-Example:
-Q: I'm looking for a restaurant in New York, what do you suggest?
-A: You can try Tower Restaurant, which offers an à la carte menu and has promotions on Tuesdays. You can contact them at 0654589874 for more information.
+Example of a chatbot:
+Q: A restaurant in New York?
+A: Try Tower Restaurant, a la carte menu and specials on Tuesdays. Contact: 0654589874.
 
-The CSV Agent, on the other hand, executes Python to answer questions about the content and structure of the CSV. It requires precise questions about the data and provides factual answers. It is not limited to a specific number of rows and can analyze the entire file, but it needs clear and accurate instructions. It also doesn't have memory.
+The CSV Agent analyses the content and structure of the CSV without vectostore and answers questions in a factual manner. It requires clear and precise instructions and has no memory.
 
-Example:
-Q: What's the square root of the average age?
-A: '5.449689683556195'
+Example of a CSV agent:
+Q: Square root of the average age?
+A: 5.449689683556195
 
 ## Contributing 🙌
 Contributions are always welcome! If you want to contribute to this project, please open an issue, submit a pull request or contact me at barbot.yvann@gmail.com (:
