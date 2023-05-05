@@ -15,6 +15,26 @@ from modules.utils import Utilities
 from modules.sidebar import Sidebar
 from modules.chatbot import Chatbot
 
+#To be able to update the changes made to modules in localhost,
+#you can press the "r" key on the localhost page to refresh and reflect the changes made to the module files.
+def reload_module(module_name):
+    import importlib
+    import sys
+    if module_name in sys.modules:
+        importlib.reload(sys.modules[module_name])
+    return sys.modules[module_name]
+
+chatbot_module = reload_module('modules.chatbot')
+history_module = reload_module('modules.history')
+layout_module = reload_module('modules.layout')
+utils_module = reload_module('modules.utils')
+sidebar_module = reload_module('modules.sidebar')
+
+Chatbot = chatbot_module.Chatbot
+ChatHistory = history_module.ChatHistory
+Layout = layout_module.Layout
+Utilities = utils_module.Utilities
+Sidebar = sidebar_module.Sidebar
 
 def init():
     load_dotenv()
@@ -47,7 +67,7 @@ def main():
 
             try:
                 chatbot = utils.setup_chatbot(
-                    uploaded_file, st.session_state["model"], st.session_state["temperature"]
+                    uploaded_file, st.session_state["model"], st.session_state["temperature"], st.session_state["chain_type"]
                 )
                 st.session_state["chatbot"] = chatbot
 

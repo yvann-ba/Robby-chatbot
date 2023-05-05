@@ -7,10 +7,11 @@ from langchain.callbacks import get_openai_callback
 
 class Chatbot:
 
-    def __init__(self, model_name, temperature, vectors):
+    def __init__(self, model_name, temperature, vectors, chain_type):
         self.model_name = model_name
         self.temperature = temperature
         self.vectors = vectors
+        self.chain_type = chain_type
 
     _template = """Given the following conversation and a follow-up question, rephrase the follow-up question to be a standalone question.
         Chat History:
@@ -35,16 +36,18 @@ class Chatbot:
         llm = ChatOpenAI(model_name=self.model_name, temperature=self.temperature)
         chain = ConversationalRetrievalChain.from_llm(
             llm=llm,
-            condense_question_prompt=self.CONDENSE_QUESTION_PROMPT,
-            qa_prompt=self.QA_PROMPT,
+            chain_type=self.chain_type,
+            #condense_question_prompt=self.CONDENSE_QUESTION_PROMPT,
+            #qa_prompt=self.QA_PROMPT,
             retriever=self.vectors.as_retriever(),
+            verbose=True
         )
 
         chain_input = {"question": query, "chat_history": st.session_state["history"]}
         result = chain(chain_input)
 
         st.session_state["history"].append((query, result["answer"]))
-        count_tokens_chain(chain, chain_input)
+        #count_tokens_chain(chain, chain_input)
         return result["answer"]
 
 

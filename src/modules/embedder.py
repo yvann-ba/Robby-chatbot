@@ -37,8 +37,10 @@ class Embedder:
         file_extension = get_file_extension(original_filename)
 
         if file_extension == ".csv":
-            loader = CSVLoader(file_path=tmp_file_path, encoding="utf-8")
-            data = loader.load_and_split()
+            loader = CSVLoader(file_path=tmp_file_path, encoding="utf-8",csv_args={
+                'delimiter': ',',
+                })
+            data = loader.load()
 
         elif file_extension == ".pdf":
             loader = PyPDFLoader(file_path=tmp_file_path)  
@@ -53,7 +55,7 @@ class Embedder:
         with open(f"{self.PATH}/{original_filename}.pkl", "wb") as f:
             pickle.dump(vectors, f)
         print(data)
-        
+
     def getDocEmbeds(self, file, original_filename):
         """
         Retrieves document embeddings
