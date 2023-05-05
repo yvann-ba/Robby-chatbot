@@ -53,6 +53,7 @@ Launch the chat service locally :
 
 #### That's it! The service is now up and running locally. 🤗
 
+## Information 📝:
 Robby-chatbot contains a chatbot with memory for differents types of files and a CSV-agent, both based on a given file. The chatbot discusses the elements of the file with the user in a user-friendly way from a vectorstore (max. 4 indexes at a time). 
 
 Example of a chatbot:
