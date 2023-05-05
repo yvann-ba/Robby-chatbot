@@ -2,6 +2,7 @@ import streamlit as st
 import os
 
 class Sidebar:
+
     MODEL_OPTIONS = ["gpt-3.5-turbo", "gpt-4"]
     TEMPERATURE_MIN_VALUE = 0.0
     TEMPERATURE_MAX_VALUE = 1.0
@@ -20,7 +21,6 @@ class Sidebar:
         ]
         for section in sections:
             about.write(section)
-
 
     @staticmethod
     def reset_chat_button():
@@ -41,6 +41,7 @@ class Sidebar:
             step=self.TEMPERATURE_STEP,
         )
         st.session_state["temperature"] = temperature
+        
     def csv_agent_button(self, uploaded_file):
         st.session_state.setdefault("show_csv_agent", False)
         
