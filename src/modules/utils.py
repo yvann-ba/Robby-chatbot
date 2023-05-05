@@ -71,7 +71,7 @@ class Utilities:
         return uploaded_file
 
     @staticmethod
-    def setup_chatbot(uploaded_file, model, temperature):
+    def setup_chatbot(uploaded_file, model, temperature, chain_type):
         """
         Sets up the chatbot with the uploaded file, model, and temperature
         """
@@ -84,7 +84,7 @@ class Utilities:
             vectors = embeds.getDocEmbeds(file, uploaded_file.name)
 
             # Create a Chatbot instance with the specified model and temperature
-            chatbot = Chatbot(model, temperature, vectors)
+            chatbot = Chatbot(model, temperature,vectors, chain_type)
         st.session_state["ready"] = True
 
         return chatbot
