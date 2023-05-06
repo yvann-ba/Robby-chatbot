@@ -8,10 +8,11 @@ class Layout:
         """
         st.markdown(
             """
-            <h1 style='text-align: center;'> Talk with Robby about your file ! 😁</h1>
+            <h1 style='text-align: center;'> Ask Robby about your file ! 😁</h1>
             """,
             unsafe_allow_html=True,
         )
+
     def show_api_key_missing(self):
         """
         Displays a message if the user has not entered an API key
@@ -24,6 +25,9 @@ class Layout:
             """,
             unsafe_allow_html=True,
         )
+        
+        st.image(r"pic\robby_the_robot.gif",caption = "Robby The robot, from Forbidden Planet", use_column_width=True)
+
     def prompt_form(self):
         """
         Displays the prompt form
