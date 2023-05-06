@@ -1,7 +1,7 @@
 # Robby-chatbot 🤖
 
 ### An AI chatbot featuring conversational memory, designed to enable users to discuss their CSV and PDF data in a more intuitive manner. 📄
-![Robby](robby-pic.png)
+![Robby](pic/robby-pic.png)
 Robby the Robot from [Forbidden Planet](https://youtu.be/bflfQN_YsTM)
 
 #### By integrating the strengths of Langchain and OpenAI, Robby-chatbot employs large language models to provide users with seamless, context-aware natural language interactions for a better understanding of their PDF and CSV data.🧠
