@@ -49,6 +49,10 @@ class Utilities:
                         pdf_text += page.extract_text() + "\n\n"
                 file_container.write(pdf_text)
             
+            def show_txt_file(uploaded_file):
+                file_container = st.expander("Your TXT file :")
+                file_container.write(uploaded_file)
+            
             def get_file_extension(uploaded_file):
                 return os.path.splitext(uploaded_file)[1].lower()
             
@@ -59,6 +63,8 @@ class Utilities:
                 show_csv_file(uploaded_file)
             elif file_extension== ".pdf" : 
                 show_pdf_file(uploaded_file)
+            elif file_extension== ".pdf" : 
+                show_txt_file(uploaded_file)
 
         else:
             st.sidebar.info(
@@ -71,7 +77,8 @@ class Utilities:
         return uploaded_file
 
     @staticmethod
-    def setup_chatbot(uploaded_file, model, temperature, chain_type):
+    def setup_chatbot(uploaded_file, model, temperature,
+                      ):
         """
         Sets up the chatbot with the uploaded file, model, and temperature
         """
@@ -84,7 +91,7 @@ class Utilities:
             vectors = embeds.getDocEmbeds(file, uploaded_file.name)
 
             # Create a Chatbot instance with the specified model and temperature
-            chatbot = Chatbot(model, temperature,vectors, chain_type)
+            chatbot = Chatbot(model, temperature,vectors)
         st.session_state["ready"] = True
 
         return chatbot

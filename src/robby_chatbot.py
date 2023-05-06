@@ -67,7 +67,7 @@ def main():
 
             try:
                 chatbot = utils.setup_chatbot(
-                    uploaded_file, st.session_state["model"], st.session_state["temperature"], st.session_state["chain_type"]
+                    uploaded_file, st.session_state["model"], st.session_state["temperature"]
                 )
                 st.session_state["chatbot"] = chatbot
 
