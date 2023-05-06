@@ -25,8 +25,8 @@ class Layout:
             """,
             unsafe_allow_html=True,
         )
-        
-        st.image("pic\gif_robby_the_robot.gif",caption = "Robby The robot, from Forbidden Planet", use_column_width=True)
+        gif_url = "robby_the_robot.gif"
+        st.image(gif_url,caption = "Robby The robot, from Forbidden Planet", use_column_width=True)
 
     def prompt_form(self):
         """
