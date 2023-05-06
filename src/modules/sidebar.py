@@ -4,7 +4,8 @@ import os
 class Sidebar:
 
     MODEL_OPTIONS = ["gpt-3.5-turbo", "gpt-4"]
-    CHAIN_TYPE_OPTIONS = ["stuff", "map_reduce", "refine", "map-rerank"]
+    #don't work with doc_chain if use QA_PROMPT
+    #CHAIN_TYPE_OPTIONS = ["stuff", "map_reduce", "refine", "map-rerank"]
     TEMPERATURE_MIN_VALUE = 0.0
     TEMPERATURE_MAX_VALUE = 1.0
     TEMPERATURE_DEFAULT_VALUE = 0.0
@@ -60,10 +61,10 @@ class Sidebar:
             self.reset_chat_button()
             self.csv_agent_button(uploaded_file)
             self.model_selector()
-            self.chain_type_selector()
+            #self.chain_type_selector()
             self.temperature_slider()
             st.session_state.setdefault("model", self.MODEL_OPTIONS[0])
-            st.session_state.setdefault("chain_type", self.CHAIN_TYPE_OPTIONS[0])
+            #st.session_state.setdefault("chain_type", self.CHAIN_TYPE_OPTIONS[0])
             st.session_state.setdefault("temperature", self.TEMPERATURE_DEFAULT_VALUE)
 
     
