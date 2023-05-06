@@ -10,11 +10,11 @@ from langchain.chains.question_answering import load_qa_chain
 
 class Chatbot:
 
-    def __init__(self, model_name, temperature, vectors, chain_type):
+    def __init__(self, model_name, temperature, vectors):
         self.model_name = model_name
         self.temperature = temperature
         self.vectors = vectors
-        self.chain_type = chain_type
+
 
     _template = """Given the following conversation and a follow-up question, rephrase the follow-up question to be a standalone question.
         Chat History:
@@ -41,7 +41,6 @@ class Chatbot:
         retriever = self.vectors.as_retriever()
 
         question_generator = LLMChain(llm=llm, prompt=CONDENSE_QUESTION_PROMPT,verbose=True)
-        print(self.chain_type)
         doc_chain = load_qa_chain(llm=llm, 
                                   
                                   prompt=self.QA_PROMPT,
