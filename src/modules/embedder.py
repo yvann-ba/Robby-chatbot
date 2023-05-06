@@ -1,10 +1,14 @@
 import os
 import pickle
 import tempfile
+import streamlit as st
 from langchain.document_loaders.csv_loader import CSVLoader
 from langchain.vectorstores import FAISS
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.document_loaders import PyPDFLoader
+from langchain.document_loaders import TextLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+
 
 class Embedder:
 
@@ -29,22 +33,31 @@ class Embedder:
             
         def get_file_extension(uploaded_file):
             file_extension =  os.path.splitext(uploaded_file)[1].lower()
-            if file_extension not in [".csv", ".pdf"]:
-                raise ValueError("Unsupported file type. Only CSV and PDF files are allowed.")
+            #if file_extension not in [".csv", ".pdf"]:
+            #    raise ValueError("Unsupported file type. Only CSV and PDF files are allowed.")
             
             return file_extension
         
+        text_splitter = RecursiveCharacterTextSplitter(
+                # Set a really small chunk size, just to show.
+                chunk_size = 2000,
+                chunk_overlap  = 50,
+                length_function = len,
+            )
         file_extension = get_file_extension(original_filename)
 
         if file_extension == ".csv":
             loader = CSVLoader(file_path=tmp_file_path, encoding="utf-8",csv_args={
-                'delimiter': ',',
-                })
+                'delimiter': ',',})
             data = loader.load()
 
         elif file_extension == ".pdf":
             loader = PyPDFLoader(file_path=tmp_file_path)  
-            data = loader.load_and_split()
+            data = loader.load_and_split(text_splitter)
+        
+        elif file_extension == ".txt":
+            loader = TextLoader(file_path=tmp_file_path, encoding="utf-8")
+            data = loader.load_and_split(text_splitter)
             
         embeddings = OpenAIEmbeddings()
 
@@ -54,7 +67,7 @@ class Embedder:
         # Save the vectors to a pickle file
         with open(f"{self.PATH}/{original_filename}.pkl", "wb") as f:
             pickle.dump(vectors, f)
-        print(data)
+
 
     def getDocEmbeds(self, file, original_filename):
         """

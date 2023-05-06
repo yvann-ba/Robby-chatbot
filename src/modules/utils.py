@@ -32,7 +32,7 @@ class Utilities:
         """
         Handles the file upload and displays the uploaded file
         """
-        uploaded_file = st.sidebar.file_uploader("upload", type=["csv", "pdf"], label_visibility="collapsed")
+        uploaded_file = st.sidebar.file_uploader("upload", type=["csv", "pdf", "txt"], label_visibility="collapsed")
         if uploaded_file is not None:
 
             def show_csv_file(uploaded_file):
@@ -46,7 +46,7 @@ class Utilities:
                 with pdfplumber.open(uploaded_file) as pdf:
                     pdf_text = ""
                     for page in pdf.pages:
-                        pdf_text += page.extract_text() + "\n"
+                        pdf_text += page.extract_text() + "\n\n"
                 file_container.write(pdf_text)
             
             def get_file_extension(uploaded_file):
