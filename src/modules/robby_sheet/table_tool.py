@@ -12,65 +12,63 @@ from streamlit_chat import message
 import pandas as pd
 from pandasai import PandasAI
 from pandasai.llm.openai import OpenAI
+from langchain.agents import create_pandas_dataframe_agent
+from langchain.llms import OpenAI
 
-def count_tokens_agent(agent, query):
-    """
-    Count the tokens used by the CSV Agent
-    """
-    with get_openai_callback() as cb:
-        result = agent(query)
-        st.write(f'Spent a total of {cb.total_tokens} tokens')
 
-    return result
 
-def handle_csv_agent(uploaded_file):
+class CsvAgent :
 
-    # format the CSV file for the agent
-    uploaded_file_content = BytesIO(uploaded_file.getvalue())
+    @staticmethod
+    def count_tokens_agent(agent, query):
+        """
+        Count the tokens used by the CSV Agent
+        """
+        with get_openai_callback() as cb:
+            result = agent(query)
+            st.write(f'Spent a total of {cb.total_tokens} tokens')
 
-    # Initialize the chat history in the session_state if it doesn't exist
-    if "chat_history" not in st.session_state:
-        st.session_state.chat_history = []
+        return result
+    
+    def __init__(self, uploaded_file_content):
+        self.agent = self.create_agent(uploaded_file_content)
 
-    with st.form(key="query"):
+    def create_agent(self, uploaded_file_content):
+        llm=ChatOpenAI(temperature=st.session_state["temperature"],
+                       model_name=st.session_state["model"],request_timeout=120
+                       )
+        return create_pandas_dataframe_agent(llm=llm,
+                                df = uploaded_file_content,
+                                verbose=True, max_iterations=5
+                                )
 
-        query = st.text_input("Ask CSV Agent :", value="", type="default",  placeholder="e-g : How many rows in my file ?")
-
-        submitted = st.form_submit_button("Submit")
-
-    if submitted:
-
-        agent = create_csv_agent(ChatOpenAI(temperature=st.session_state["temperature"], 
-                                            model_name=st.session_state["model"]), uploaded_file_content, 
-                                            verbose=True, max_iterations=4)
+    def get_agent_response(self, query):
         old_stdout = sys.stdout
         sys.stdout = captured_output = StringIO()
-        result = agent.run(query)
-
-        # Add the question and answer to the chat_history
-        st.session_state.chat_history.append(("user", query))
-        st.session_state.chat_history.append(("agent", result))
-        
+        result = self.agent.run(query)
         sys.stdout = old_stdout
+        return result, captured_output
 
-        # Clean up the agent's thoughts to remove unwanted characters
+    def process_agent_thoughts(self,captured_output):
         thoughts = captured_output.getvalue()
         cleaned_thoughts = re.sub(r'\x1b\[[0-9;]*[a-zA-Z]', '', thoughts)
         cleaned_thoughts = re.sub(r'\[1m>', '', cleaned_thoughts)
+        return cleaned_thoughts
 
-        # Display the agent's thoughts
+    def display_agent_thoughts(self,cleaned_thoughts):
         with st.expander("Display the agent's thoughts"):
             st.write(cleaned_thoughts)
-            count_tokens_agent(agent, query)
 
-    # Display the chat_history in a chat-like format using streamlit-chat
-    for i, (sender, message_text) in enumerate(st.session_state.chat_history):
-        if sender == "user":
-            message(message_text, is_user=True, key=f"{i}_user")
-        else:
-            message(message_text, key=f"{i}")
-    if st.session_state["reset_chat"]:
-        st.session_state.chat_history = []
+    def update_chat_history(self,query, result):
+        st.session_state.chat_history.append(("user", query))
+        st.session_state.chat_history.append(("agent", result))
+
+    def display_chat_history(self):
+        for i, (sender, message_text) in enumerate(st.session_state.chat_history):
+            if sender == "user":
+                message(message_text, is_user=True, key=f"{i}_user")
+            else:
+                message(message_text, key=f"{i}")
 
 
 def handle_pandas_ai(uploaded_file):

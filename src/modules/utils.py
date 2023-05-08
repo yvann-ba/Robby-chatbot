@@ -19,7 +19,7 @@ class Utilities:
             st.sidebar.success("API key loaded from .env", icon="🚀")
         else:
             user_api_key = st.sidebar.text_input(
-                label="#### Your OpenAI API key 👇", placeholder="Paste your openAI API key, sk-", type="password"
+                label="#### Your OpenAI API key 👇", placeholder="sk-...", type="password"
             )
 
         return user_api_key
@@ -27,7 +27,7 @@ class Utilities:
     @staticmethod
     def handle_upload(file_types):
         """
-        Handles the file upload and displays the uploaded file
+        Handles and display uploaded_file
         :param file_types: List of accepted file types, e.g., ["csv", "pdf", "txt"]
         """
         uploaded_file = st.sidebar.file_uploader("upload", type=file_types, label_visibility="collapsed")
@@ -73,8 +73,7 @@ class Utilities:
         return uploaded_file
 
     @staticmethod
-    def setup_chatbot(uploaded_file, model, temperature,
-                      ):
+    def setup_chatbot(uploaded_file, model, temperature):
         """
         Sets up the chatbot with the uploaded file, model, and temperature
         """
