@@ -11,13 +11,6 @@ class Chatbot:
         self.temperature = temperature
         self.vectors = vectors
 
-    _template = """Given the following conversation and a follow-up question, rephrase the follow-up question to be a standalone question.
-        Chat History:
-        {chat_history}
-        Follow-up entry: {question}
-        Standalone question:"""
-    CONDENSE_QUESTION_PROMPT = PromptTemplate.from_template(_template)
-
     qa_template = """You are a friendly conversational assistant named Robby, designed to answer questions and chat with the user from a contextual file.
         You receive data from a user's file and a question, you must help the user find the information they need. 
         Your answers must be user-friendly and respond to the user in the language they speak to you.
@@ -25,6 +18,7 @@ class Chatbot:
         =========
         context: {context}
         ======="""
+    
     QA_PROMPT = PromptTemplate(template=qa_template, input_variables=["question", "context"])
 
     def conversational_chat(self, query):
@@ -44,6 +38,7 @@ class Chatbot:
         st.session_state["history"].append((query, result["answer"]))
         #count_tokens_chain(chain, chain_input)
         return result["answer"]
+
 
 def count_tokens_chain(chain, query):
     with get_openai_callback() as cb:
