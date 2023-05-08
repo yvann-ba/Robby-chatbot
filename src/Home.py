@@ -36,7 +36,7 @@ st.markdown("---")
 st.subheader("🚀 Robby's Pages")
 st.write("""
 - **Robby-Chat**: General Chat on data (PDF, TXT,CSV) with a [vectorstore](https://github.com/facebookresearch/faiss) (can't process the whole file just index useful parts(max 4) for respond to the user ) | works with [ConversationalRetrievalChain](https://python.langchain.com/en/latest/modules/chains/index_examples/chat_vector_db.html) + (soon) Summarize data
-- **Robby-Sheet**: Chat on tabular data (CSV) | for precise information | can process the whole file (with python code) | works with [CSV_Agent](https://python.langchain.com/en/latest/modules/agents/toolkits/examples/csv.html) + [PandasAI](https://github.com/gventuri/pandas-ai) for data manipulation and graph creation (experimental)
+- **Robby-Sheet** (beta): Chat on tabular data (CSV) | for precise information | can process the whole file (with python code) | works with [CSV_Agent](https://python.langchain.com/en/latest/modules/agents/toolkits/examples/csv.html) + [PandasAI](https://github.com/gventuri/pandas-ai) for data manipulation and graph creation (experimental)
 - (soon) **Robby-Youtube**: Chat on YouTube videos
 - (soon) **Robby-Lyrics**: Chat and analyze music lyrics | works by scraping lyrics from Genius
 - (soon) **Robby-Github**: Chat over GitHub repositories for understanding the code
