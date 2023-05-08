@@ -1,5 +1,4 @@
 import streamlit as st
-import os
 
 class Sidebar:
 
@@ -15,7 +14,6 @@ class Sidebar:
         sections = [
             "#### Robby is an AI chatbot with a conversational memory, designed to allow users to discuss their data in a more intuitive way. 📄",
             "#### It uses large language models to provide users with natural language interactions about user data content. 🌐",
-            "#### Works with CSV and PDF files, more soon...",
             "#### Powered by [Langchain](https://github.com/hwchase17/langchain), [OpenAI](https://platform.openai.com/docs/models/gpt-3-5) and [Streamlit](https://github.com/streamlit/streamlit) ⚡",
             "#### Source code: [yvann-hub/Robby-chatbot](https://github.com/yvann-hub/Robby-chatbot)",
         ]
@@ -42,18 +40,10 @@ class Sidebar:
         )
         st.session_state["temperature"] = temperature
         
-    def csv_agent_button(self, uploaded_file):
-        st.session_state.setdefault("show_csv_agent", False)
-        
-        if uploaded_file and os.path.splitext(uploaded_file.name)[1].lower() == ".csv":
-            if st.sidebar.button("CSV Agent"):
-                st.session_state["show_csv_agent"] = not st.session_state["show_csv_agent"]
-
-    def show_options(self, uploaded_file):
+    def show_options(self):
         with st.sidebar.expander("🛠️ Robby's Tools", expanded=False):
 
             self.reset_chat_button()
-            self.csv_agent_button(uploaded_file)
             self.model_selector()
             self.temperature_slider()
             st.session_state.setdefault("model", self.MODEL_OPTIONS[0])

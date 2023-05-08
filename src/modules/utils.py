@@ -5,7 +5,6 @@ import pdfplumber
 
 from modules.chatbot import Chatbot
 from modules.embedder import Embedder
-from langchain.callbacks import get_openai_callback
 
 class Utilities:
 
@@ -22,17 +21,16 @@ class Utilities:
             user_api_key = st.sidebar.text_input(
                 label="#### Your OpenAI API key 👇", placeholder="Paste your openAI API key, sk-", type="password"
             )
-            if user_api_key:
-                st.sidebar.success("API key loaded", icon="🚀")
 
         return user_api_key
     
     @staticmethod
-    def handle_upload():
+    def handle_upload(file_types):
         """
         Handles the file upload and displays the uploaded file
+        :param file_types: List of accepted file types, e.g., ["csv", "pdf", "txt"]
         """
-        uploaded_file = st.sidebar.file_uploader("upload", type=["csv", "pdf", "txt"], label_visibility="collapsed")
+        uploaded_file = st.sidebar.file_uploader("upload", type=file_types, label_visibility="collapsed")
         if uploaded_file is not None:
 
             def show_csv_file(uploaded_file):
@@ -50,8 +48,10 @@ class Utilities:
                 file_container.write(pdf_text)
             
             def show_txt_file(uploaded_file):
-                file_container = st.expander("Your TXT file :")
-                file_container.write(uploaded_file)
+                file_container = st.expander("Your TXT file:")
+                uploaded_file.seek(0)
+                content = uploaded_file.read().decode("utf-8")
+                file_container.write(content)
             
             def get_file_extension(uploaded_file):
                 return os.path.splitext(uploaded_file)[1].lower()
@@ -63,14 +63,10 @@ class Utilities:
                 show_csv_file(uploaded_file)
             elif file_extension== ".pdf" : 
                 show_pdf_file(uploaded_file)
-            elif file_extension== ".pdf" : 
+            elif file_extension== ".txt" : 
                 show_txt_file(uploaded_file)
 
         else:
-            st.sidebar.info(
-                "👆 Upload your CSV or PDF file to get started, "
-                "CSV sample for try : [fishfry-locations.csv](https://drive.google.com/file/d/1TpP3thVnTcDO1_lGSh99EKH2iF3GDE7_/view?usp=sharing),"
-            )
             st.session_state["reset_chat"] = True
 
         #print(uploaded_file)
@@ -96,13 +92,5 @@ class Utilities:
 
         return chatbot
 
-    def count_tokens_agent(agent, query):
-        """
-        Count the tokens used by the CSV Agent
-        """
-        with get_openai_callback() as cb:
-            result = agent(query)
-            st.write(f'Spent a total of {cb.total_tokens} tokens')
 
-        return result
     
