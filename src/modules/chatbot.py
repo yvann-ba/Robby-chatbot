@@ -3,10 +3,6 @@ from langchain.chat_models import ChatOpenAI
 from langchain.chains import ConversationalRetrievalChain
 from langchain.prompts.prompt import PromptTemplate
 from langchain.callbacks import get_openai_callback
-from langchain import LLMChain
-from langchain.chains.llm import LLMChain
-from langchain.chains.conversational_retrieval.prompts import CONDENSE_QUESTION_PROMPT
-from langchain.chains.question_answering import load_qa_chain
 
 class Chatbot:
 
@@ -14,7 +10,6 @@ class Chatbot:
         self.model_name = model_name
         self.temperature = temperature
         self.vectors = vectors
-
 
     _template = """Given the following conversation and a follow-up question, rephrase the follow-up question to be a standalone question.
         Chat History:
@@ -40,16 +35,8 @@ class Chatbot:
 
         retriever = self.vectors.as_retriever()
 
-        question_generator = LLMChain(llm=llm, prompt=CONDENSE_QUESTION_PROMPT,verbose=True)
-        doc_chain = load_qa_chain(llm=llm, 
-                                  
-                                  prompt=self.QA_PROMPT,
-                                  verbose=True,
-                                  chain_type="stuff")
-
-        chain = ConversationalRetrievalChain(
-            retriever=retriever, combine_docs_chain=doc_chain, question_generator=question_generator, verbose=True, return_source_documents=True)
-
+        chain = ConversationalRetrievalChain.from_llm(llm=llm,
+            retriever=retriever, verbose=True, return_source_documents=True)
 
         chain_input = {"question": query, "chat_history": st.session_state["history"]}
         result = chain(chain_input)
@@ -57,7 +44,6 @@ class Chatbot:
         st.session_state["history"].append((query, result["answer"]))
         #count_tokens_chain(chain, chain_input)
         return result["answer"]
-
 
 def count_tokens_chain(chain, query):
     with get_openai_callback() as cb:

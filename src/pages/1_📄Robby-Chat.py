@@ -1,19 +1,12 @@
 import os
-import sys
-import re
 import streamlit as st
-from dotenv import load_dotenv
-from io import BytesIO
 from io import StringIO
-
-from langchain.agents import create_csv_agent
-from langchain.chat_models import ChatOpenAI
-
+import re
+import sys
 from modules.history import ChatHistory
 from modules.layout import Layout
 from modules.utils import Utilities
 from modules.sidebar import Sidebar
-from modules.chatbot import Chatbot
 
 #To be able to update the changes made to modules in localhost,
 #you can press the "r" key on the localhost page to refresh and reflect the changes made to the module files.
@@ -24,47 +17,40 @@ def reload_module(module_name):
         importlib.reload(sys.modules[module_name])
     return sys.modules[module_name]
 
-chatbot_module = reload_module('modules.chatbot')
 history_module = reload_module('modules.history')
 layout_module = reload_module('modules.layout')
 utils_module = reload_module('modules.utils')
 sidebar_module = reload_module('modules.sidebar')
 
-Chatbot = chatbot_module.Chatbot
 ChatHistory = history_module.ChatHistory
 Layout = layout_module.Layout
 Utilities = utils_module.Utilities
 Sidebar = sidebar_module.Sidebar
 
-def init():
-    load_dotenv()
-    st.set_page_config(layout="wide", page_icon="💬", page_title="Robby | Chat-Bot 🤖")
+st.set_page_config(layout="wide", page_icon="💬", page_title="Robby | Chat-Bot 🤖")
 
-def main():
-    # Initialize the app
-    init()
+# Instantiate the main components
+layout, sidebar, utils = Layout(), Sidebar(), Utilities()
 
-    # Instantiate the main components
-    layout, sidebar, utils = Layout(), Sidebar(), Utilities()
+layout.show_header("PDF, TXT")
 
-    layout.show_header()
+user_api_key = utils.load_api_key()
 
-    user_api_key = utils.load_api_key()
+if not user_api_key:
+    layout.show_api_key_missing()
+else:
+    os.environ["OPENAI_API_KEY"] = user_api_key
 
-    if not user_api_key:
-        layout.show_api_key_missing()
-    else:
-        os.environ["OPENAI_API_KEY"] = user_api_key
+    uploaded_file = utils.handle_upload(["pdf", "txt"])
 
-        uploaded_file = utils.handle_upload()
+    if uploaded_file:
 
-        if uploaded_file:
+        # Configure the sidebar
+        sidebar.show_options()
+
+        if os.path.splitext(uploaded_file.name)[1].lower() != ".csv":
             # Initialize chat history
             history = ChatHistory()
-
-            # Configure the sidebar
-            sidebar.show_options(uploaded_file)
-
             try:
                 chatbot = utils.setup_chatbot(
                     uploaded_file, st.session_state["model"], st.session_state["temperature"]
@@ -89,30 +75,15 @@ def main():
                         if is_ready:
                             # Update the chat history and display the chat messages
                             history.append("user", user_input)
-                            output = st.session_state["chatbot"].conversational_chat(user_input)
-                            history.append("assistant", output)
-
-                    history.generate_messages(response_container)
-
-                    # launch CSV Agent if button clicked
-                    if st.session_state["show_csv_agent"]:
-
-                        query = st.text_input(label="Use CSV agent for precise information about the structure of your csv file", 
-                                              placeholder="e-g : how many rows in my file ?"
-                                              )
-                        if query != "":
-
-                            # format the CSV file for the agent
-                            uploaded_file_content = BytesIO(uploaded_file.getvalue())
 
                             old_stdout = sys.stdout
                             sys.stdout = captured_output = StringIO()
 
-                            # Create and run the CSV agent with the user's query
-                            agent = create_csv_agent(ChatOpenAI(temperature=0), uploaded_file_content, verbose=True, max_iterations=4)
-                            result = agent.run(query)
+                            output = st.session_state["chatbot"].conversational_chat(user_input)
 
                             sys.stdout = old_stdout
+
+                            history.append("assistant", output)
 
                             # Clean up the agent's thoughts to remove unwanted characters
                             thoughts = captured_output.getvalue()
@@ -122,15 +93,9 @@ def main():
                             # Display the agent's thoughts
                             with st.expander("Display the agent's thoughts"):
                                 st.write(cleaned_thoughts)
-                                Utilities.count_tokens_agent(agent, query)
 
-                            st.write(result)
-
-
+                    history.generate_messages(response_container)
             except Exception as e:
                 st.error(f"Error: {str(e)}")
 
-    sidebar.about()
-
-if __name__ == "__main__":
-    main()
+sidebar.about()

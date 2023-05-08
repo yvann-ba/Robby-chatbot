@@ -1,1 +1,1 @@
-web: sh setup.sh && streamlit run src/robby_chatbot.py
+web: sh setup.sh && streamlit run src/Home.py

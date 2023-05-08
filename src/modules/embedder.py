@@ -9,7 +9,6 @@ from langchain.document_loaders import PyPDFLoader
 from langchain.document_loaders import TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
-
 class Embedder:
 
     def __init__(self):
@@ -33,17 +32,15 @@ class Embedder:
             
         def get_file_extension(uploaded_file):
             file_extension =  os.path.splitext(uploaded_file)[1].lower()
-            #if file_extension not in [".csv", ".pdf"]:
-            #    raise ValueError("Unsupported file type. Only CSV and PDF files are allowed.")
             
             return file_extension
         
         text_splitter = RecursiveCharacterTextSplitter(
-                # Set a really small chunk size, just to show.
-                chunk_size = 2000,
-                chunk_overlap  = 50,
+                chunk_size = 2500,
+                chunk_overlap  = 100,
                 length_function = len,
             )
+        
         file_extension = get_file_extension(original_filename)
 
         if file_extension == ".csv":
@@ -67,7 +64,6 @@ class Embedder:
         # Save the vectors to a pickle file
         with open(f"{self.PATH}/{original_filename}.pkl", "wb") as f:
             pickle.dump(vectors, f)
-
 
     def getDocEmbeds(self, file, original_filename):
         """
