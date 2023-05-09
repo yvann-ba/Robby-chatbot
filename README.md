@@ -11,13 +11,13 @@ To use Robby-chatbot, simply visit the following link :
 
 ### [robby-chatbot.com](https://robby-chatbot.com)
 
-### TO-DO :
+## TO-DO :
 - [x] enable print tokens utilizations for the conversation
 - [x] Chatbot on PDF and TXTfiles
 - [x] Use CSV Agent for chat with the entire csv file
 - [ ] Add lots of files accepted like GitHub repo, Excel etc...
 - [ ] Add free models like vicuna and free embeddings
-- [ ] Replace chain of the chatbot by a custom agent for handling more features ans ask questions about all informations of the files + memory + vectorstore
+- [ ] Replace chain of the chatbot by a custom agent for handling more features | memory + vectorstore + custom prompt
 
 ## Running Locally 💻
 Follow these steps to set up and run the service locally :
