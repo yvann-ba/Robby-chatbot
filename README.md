@@ -1,4 +1,6 @@
 # Robby-chatbot 🤖
+[![Twitter Follow](https://img.shields.io/twitter/follow/yvann_hub?style=social)](https://twitter.com/yvann_hub)
+![visitors](https://visitor-badge.glitch.me/badge?page_id=yvann-hub.Robby-chatbot)
 
 ### An AI chatbot featuring conversational memory, designed to enable users to discuss their CSV, PDF and TXT data in a more intuitive manner. 📄
 ![Robby](robby-pic.png)
