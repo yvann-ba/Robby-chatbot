@@ -3,9 +3,8 @@ import importlib
 import sys
 import pandas as pd
 import streamlit as st
-from dotenv import load_dotenv
-from io import StringIO, BytesIO
-from modules.robby_sheet.table_tool import CsvAgent, handle_pandas_ai
+from io import BytesIO
+from modules.robby_sheet.table_tool import PandasAgent
 from modules.layout import Layout
 from modules.utils import Utilities
 from modules.sidebar import Sidebar
@@ -38,29 +37,37 @@ if not user_api_key:
     layout.show_api_key_missing()
 
 else:
+    st.session_state.setdefault("reset_chat", False)
 
     uploaded_file = utils.handle_upload(["csv"])
 
     if uploaded_file:
 
-        sidebar.show_options()
-
         uploaded_file_content = BytesIO(uploaded_file.getvalue())
         df = pd.read_csv(uploaded_file_content)
-        
+        st.session_state.df = df
+
         if "chat_history" not in st.session_state:
             st.session_state["chat_history"] = []
-        csv_agent = CsvAgent(df)
-        query = st.text_input("Ask CSV Agent :", value="", type="default",  placeholder="e-g : How many rows in my file ?")
+        csv_agent = PandasAgent()
 
-        if query :
-            result, captured_output = csv_agent.get_agent_response(query)
+        with st.form(key="query"):
+
+            query = st.text_input("Ask [PandasAI](https://github.com/gventuri/pandas-ai) (look the pandas-AI read-me for how use it)", value="", type="default", 
+                placeholder="e-g : How many rows ? "
+                )
+            submitted_query = st.form_submit_button("Submit")
+            reset_chat_button = st.form_submit_button("Reset Chat")
+            if reset_chat_button:
+                st.session_state["chat_history"] = []
+        if submitted_query:
+            result, captured_output = csv_agent.get_agent_response(df, query)
             cleaned_thoughts = csv_agent.process_agent_thoughts(captured_output)
             csv_agent.display_agent_thoughts(cleaned_thoughts)
             csv_agent.update_chat_history(query, result)
             csv_agent.display_chat_history()
-
-
-        handle_pandas_ai(uploaded_file)
+        if st.session_state.df is not None:
+            st.subheader("Current dataframe:")
+            st.write(st.session_state.df)
 
 sidebar.about()

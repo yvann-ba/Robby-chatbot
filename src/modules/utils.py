@@ -59,9 +59,9 @@ class Utilities:
             file_extension = get_file_extension(uploaded_file.name)
 
             # Show the contents of the file based on its extension
-            if file_extension == ".csv" :
-                show_csv_file(uploaded_file)
-            elif file_extension== ".pdf" : 
+            #if file_extension == ".csv" :
+            #    show_csv_file(uploaded_file)
+            if file_extension== ".pdf" : 
                 show_pdf_file(uploaded_file)
             elif file_extension== ".txt" : 
                 show_txt_file(uploaded_file)
