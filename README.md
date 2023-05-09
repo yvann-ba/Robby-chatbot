@@ -4,7 +4,7 @@
 ![Robby](robby-pic.png)
 Robby the Robot from [Forbidden Planet](https://youtu.be/bflfQN_YsTM)
 
-#### By integrating the strengths of Langchain and OpenAI, Robby employs large language models to provide users with seamless, context-aware natural language interactions for a better understanding of their PDF and CSV data.🧠
+#### By integrating the strengths of Langchain and OpenAI, Robby employs large language models to provide users with seamless, context-aware natural language interactions for a better understanding of their data.🧠
 #### For better understanding, see my medium article 🖖 : [Build a chat-bot over your CSV data](https://medium.com/@yvann-hub/build-a-chatbot-on-your-csv-data-with-langchain-and-openai-ed121f85f0cd)
 ## Quick Start 🚀
 To use Robby-chatbot, simply visit the following link :
