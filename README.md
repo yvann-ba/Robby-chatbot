@@ -1,21 +1,25 @@
 # Robby-chatbot 🤖
+
 [![Twitter Follow](https://img.shields.io/twitter/follow/yvann_hub?style=social)](https://twitter.com/yvann_hub)
-![visitors](https://visitor-badge.glitch.me/badge?page_id=yvann-hub.Robby-chatbot)
+[![Last Commit](https://img.shields.io/github/last-commit/yvann-hub/Robby-chatbot)](https://github.com/yvann-hub/Robby-chatbot/commits/main)
+[![License](https://img.shields.io/github/license/yvann-hub/Robby-chatbot)](https://github.com/yvann-hub/Robby-chatbot/blob/main/LICENSE)
+
+
+
 
 ### An AI chatbot featuring conversational memory, designed to enable users to discuss their CSV, PDF and TXT data in a more intuitive manner. 📄
 ![Robby](robby-pic.png)
 Robby the Robot from [Forbidden Planet](https://youtu.be/bflfQN_YsTM)
 
-#### By integrating the strengths of Langchain and OpenAI, Robby employs large language models to provide users with seamless, context-aware natural language interactions for a better understanding of their data.🧠
+By integrating the strengths of Langchain and OpenAI, Robby employs large language models to provide users with seamless, 
+context-aware natural language interactions for a better understanding of their data.🧠
 #### For better understanding, see my medium article 🖖 : [Build a chat-bot over your CSV data](https://medium.com/@yvann-hub/build-a-chatbot-on-your-csv-data-with-langchain-and-openai-ed121f85f0cd)
 ## Quick Start 🚀
-To use Robby-chatbot, simply visit the following link :
 
-### [robby-chatbot.com](https://robby-chatbot.com)
+[![Robby-Chatbot](https://img.shields.io/static/v1?label=Robby-Chatbot&message=Visit%20Website&color=ffffff&labelColor=ADD8E6&style=for-the-badge)](https://robby-chatbot.com)
 
 ## TO-DO :
 - [x] enable print tokens utilizations for the conversation
-- [x] Chatbot on PDF and TXTfiles
 - [x] Use CSV Agent for chat with the entire csv file
 - [ ] Add lots of files accepted like GitHub repo, Excel etc...
 - [ ] Add free models like vicuna and free embeddings
