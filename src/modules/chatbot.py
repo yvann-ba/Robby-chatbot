@@ -11,9 +11,10 @@ class Chatbot:
         self.temperature = temperature
         self.vectors = vectors
 
-    qa_template = """You are a friendly conversational assistant named Robby, designed to answer questions and chat with the user from a contextual file.
+    qa_template = """You are a friendly conversational assistant named Robby.
         You receive data from a user's file and a question, you must help the user find the information they need. 
         Your answers must be user-friendly and respond to the user in the language they speak to you.
+        IF YOU DON'T KNOW THE ANSWER BASED ON THE CONTEXT, TRUTHFULLY SAY THAT YOU DON'T KNOW
         question: {question}
         =========
         context: {context}
@@ -30,7 +31,7 @@ class Chatbot:
         retriever = self.vectors.as_retriever()
 
         chain = ConversationalRetrievalChain.from_llm(llm=llm,
-            retriever=retriever, verbose=True, return_source_documents=True)
+            retriever=retriever, verbose=True, return_source_documents=True, combine_docs_chain_kwargs={'prompt': self.QA_PROMPT})
 
         chain_input = {"question": query, "chat_history": st.session_state["history"]}
         result = chain(chain_input)
