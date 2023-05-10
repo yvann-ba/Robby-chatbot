@@ -2,9 +2,6 @@
 
 [![Twitter Follow](https://img.shields.io/twitter/follow/yvann_hub?style=social)](https://twitter.com/yvann_hub)
 [![Last Commit](https://img.shields.io/github/last-commit/yvann-hub/Robby-chatbot)](https://github.com/yvann-hub/Robby-chatbot/commits/main)
-[![License](https://img.shields.io/github/license/yvann-hub/Robby-chatbot)](https://github.com/yvann-hub/Robby-chatbot/blob/main/LICENSE)
-
-
 
 
 ### An AI chatbot featuring conversational memory, designed to enable users to discuss their CSV, PDF and TXT data in a more intuitive manner. 📄
