@@ -46,6 +46,7 @@ else:
 
         # Configure the sidebar
         sidebar.show_options()
+        sidebar.about()
 
         # Initialize chat history
         history = ChatHistory()
@@ -96,4 +97,4 @@ else:
         except Exception as e:
             st.error(f"Error: {str(e)}")
 
-sidebar.about()
+

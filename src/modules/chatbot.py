@@ -4,6 +4,10 @@ from langchain.chains import ConversationalRetrievalChain
 from langchain.prompts.prompt import PromptTemplate
 from langchain.callbacks import get_openai_callback
 
+#fix Error: module 'langchain' has no attribute 'verbose'
+import langchain
+langchain.verbose = False
+
 class Chatbot:
 
     def __init__(self, model_name, temperature, vectors):
@@ -11,16 +15,19 @@ class Chatbot:
         self.temperature = temperature
         self.vectors = vectors
 
-    qa_template = """You are a friendly conversational assistant named Robby.
-        You receive data from a user's file and a question, you must help the user find the information they need. 
-        Your answers must be user-friendly and respond to the user in the language they speak to you.
-        IF YOU DON'T KNOW THE ANSWER BASED ON THE CONTEXT, TRUTHFULLY SAY THAT YOU DON'T KNOW
-        question: {question}
-        =========
+    qa_template = """
+        You are a helpful AI assistant named Robby. The user gives you a file its content is represented by the following pieces of context, use them to answer the question at the end.
+        If you don't know the answer, just say you don't know. Do NOT try to make up an answer.
+        If the question is not related to the context, politely respond that you are tuned to only answer questions that are related to the context.
+        Use as much detail as possible when responding.
+
         context: {context}
-        ======="""
-    
-    QA_PROMPT = PromptTemplate(template=qa_template, input_variables=["question", "context"])
+        =========
+        question: {question}
+        ======
+        """
+
+    QA_PROMPT = PromptTemplate(template=qa_template, input_variables=["context","question" ])
 
     def conversational_chat(self, query):
         """
@@ -29,6 +36,7 @@ class Chatbot:
         llm = ChatOpenAI(model_name=self.model_name, temperature=self.temperature)
 
         retriever = self.vectors.as_retriever()
+
 
         chain = ConversationalRetrievalChain.from_llm(llm=llm,
             retriever=retriever, verbose=True, return_source_documents=True, combine_docs_chain_kwargs={'prompt': self.QA_PROMPT})
