@@ -27,7 +27,7 @@ class PandasAgent :
 
     def get_agent_response(self, uploaded_file_content, query):
         llm = OpenAI()
-        pandas_ai = PandasAI(llm, verbose=True, conversational=True)
+        pandas_ai = PandasAI(llm, verbose=True)
         old_stdout = sys.stdout
         sys.stdout = captured_output = StringIO()
         
