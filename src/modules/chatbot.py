@@ -39,7 +39,7 @@ class Chatbot:
 
 
         chain = ConversationalRetrievalChain.from_llm(llm=llm,
-            retriever=retriever, verbose=True, return_source_documents=True, combine_docs_chain_kwargs={'prompt': self.QA_PROMPT})
+            retriever=retriever, verbose=True, return_source_documents=True, max_tokens_limit=4097, combine_docs_chain_kwargs={'prompt': self.QA_PROMPT})
 
         chain_input = {"question": query, "chat_history": st.session_state["history"]}
         result = chain(chain_input)
