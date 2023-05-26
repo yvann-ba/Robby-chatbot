@@ -31,7 +31,7 @@ st.set_page_config(layout="wide", page_icon="💬", page_title="Robby | Chat-Bot
 # Instantiate the main components
 layout, sidebar, utils = Layout(), Sidebar(), Utilities()
 
-layout.show_header("PDF, TXT")
+layout.show_header("PDF, TXT, CSV")
 
 user_api_key = utils.load_api_key()
 

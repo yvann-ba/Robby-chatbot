@@ -1,7 +1,6 @@
 import os
 import pickle
 import tempfile
-import streamlit as st
 from langchain.document_loaders.csv_loader import CSVLoader
 from langchain.vectorstores import FAISS
 from langchain.embeddings.openai import OpenAIEmbeddings
@@ -36,7 +35,7 @@ class Embedder:
             return file_extension
         
         text_splitter = RecursiveCharacterTextSplitter(
-                chunk_size = 2500,
+                chunk_size = 2000,
                 chunk_overlap  = 100,
                 length_function = len,
             )
