@@ -13,7 +13,8 @@ context-aware natural language interactions for a better understanding of their 
 #### For better understanding, see my medium article 🖖 : [Build a chat-bot over your CSV data](https://medium.com/@yvann-hub/build-a-chatbot-on-your-csv-data-with-langchain-and-openai-ed121f85f0cd)
 ## Quick Start 🚀
 
-[![Robby-Chatbot](https://img.shields.io/static/v1?label=Robby-Chatbot&message=Visit%20Website&color=ffffff&labelColor=ADD8E6&style=for-the-badge)]([[https://robby-chatbot.com](https://robby-chatbot.streamlit.app/)](https://robby-chatbot.streamlit.app/))
+[![Robby-Chatbot](https://img.shields.io/static/v1?label=Robby-Chatbot&message=Visit%20Website&color=ffffff&labelColor=ADD8E6&style=for-the-badge)](https://robby-chatbot.streamlit.app/)
+
 
 ## TO-DO :
 - [x] enable print tokens utilizations for the conversation
