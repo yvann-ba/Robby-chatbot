@@ -3,7 +3,7 @@
 [![Twitter Follow](https://img.shields.io/twitter/follow/yvann_hub?style=social)](https://twitter.com/yvann_hub)
 
 
-### An AI chatbot featuring conversational memory, designed to enable users to discuss their CSV, PDF, TXT data and YTB videos in a more intuitive manner. 📄
+### An AI chatbot featuring conversational memory, designed to enable users to discuss their CSV, PDF, TXT data and YTB videos in a more intuitive manner. 🚀
 ![Robby](robby-pic.png)
 Robby the Robot from [Forbidden Planet](https://youtu.be/bflfQN_YsTM)
 
