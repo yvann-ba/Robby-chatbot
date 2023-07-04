@@ -1,8 +1,14 @@
 import streamlit as st
+import os
+from dotenv import find_dotenv, load_dotenv
+
+load_dotenv(find_dotenv())
+
+default_model = os.getenv('CHATGPT_MODEL')
 
 class Sidebar:
 
-    MODEL_OPTIONS = ["gpt-3.5-turbo", "gpt-4"]
+    MODEL_OPTIONS = [default_model, "gpt-4"]
     TEMPERATURE_MIN_VALUE = 0.0
     TEMPERATURE_MAX_VALUE = 1.0
     TEMPERATURE_DEFAULT_VALUE = 0.0
@@ -10,9 +16,9 @@ class Sidebar:
 
     @staticmethod
     def about():
-        about = st.sidebar.expander("🧠 About Robby ")
+        about = st.sidebar.expander("🧠 About Isabella ")
         sections = [
-            "#### Robby is an AI chatbot with a conversational memory, designed to allow users to discuss their data in a more intuitive way. 📄",
+            "#### Isabella is an AI chatbot with a conversational memory, designed to allow users to discuss their data in a more intuitive way. 📄",
             "#### It uses large language models to provide users with natural language interactions about user data content. 🌐",
             "#### Powered by [Langchain](https://github.com/hwchase17/langchain), [OpenAI](https://platform.openai.com/docs/models/gpt-3-5) and [Streamlit](https://github.com/streamlit/streamlit) ⚡",
             "#### Source code: [yvann-hub/Robby-chatbot](https://github.com/yvann-hub/Robby-chatbot)",
@@ -41,7 +47,7 @@ class Sidebar:
         st.session_state["temperature"] = temperature
         
     def show_options(self):
-        with st.sidebar.expander("🛠️ Robby's Tools", expanded=False):
+        with st.sidebar.expander("🛠️ Isabella's Tools", expanded=False):
 
             self.reset_chat_button()
             self.model_selector()

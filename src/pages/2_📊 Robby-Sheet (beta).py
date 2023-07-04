@@ -23,7 +23,7 @@ utils_module = reload_module('modules.utils')
 sidebar_module = reload_module('modules.sidebar')
 
 
-st.set_page_config(layout="wide", page_icon="💬", page_title="Robby | Chat-Bot 🤖")
+st.set_page_config(layout="wide", page_icon="💬", page_title="Isabella | Chat-Bot 🤖")
 
 layout, sidebar, utils = Layout(), Sidebar(), Utilities()
 
