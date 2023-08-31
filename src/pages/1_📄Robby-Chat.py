@@ -31,7 +31,7 @@ st.set_page_config(layout="wide", page_icon="💬", page_title="Robby | Chat-Bot
 # Instantiate the main components
 layout, sidebar, utils = Layout(), Sidebar(), Utilities()
 
-layout.show_header("PDF, TXT, CSV")
+layout.show_header("PDF, TXT, CSV, JSON")
 
 user_api_key = utils.load_api_key()
 
@@ -40,7 +40,7 @@ if not user_api_key:
 else:
     os.environ["OPENAI_API_KEY"] = user_api_key
 
-    uploaded_file = utils.handle_upload(["pdf", "txt", "csv"])
+    uploaded_file = utils.handle_upload(["pdf", "txt", "csv","json"])
 
     if uploaded_file:
 

@@ -6,6 +6,7 @@ import pdfplumber
 from modules.chatbot import Chatbot
 from modules.embedder import Embedder
 
+
 class Utilities:
 
     @staticmethod
@@ -16,7 +17,7 @@ class Utilities:
         """
         if not hasattr(st.session_state, "api_key"):
             st.session_state.api_key = None
-        #you can define your API key in .env directly
+        # you can define your API key in .env directly
         if os.path.exists(".env") and os.environ.get("OPENAI_API_KEY") is not None:
             user_api_key = os.environ["OPENAI_API_KEY"]
             st.sidebar.success("API key loaded from .env", icon="🚀")
@@ -33,7 +34,6 @@ class Utilities:
 
         return user_api_key
 
-    
     @staticmethod
     def handle_upload(file_types):
         """
@@ -56,30 +56,38 @@ class Utilities:
                     for page in pdf.pages:
                         pdf_text += page.extract_text() + "\n\n"
                 file_container.write(pdf_text)
-            
+
             def show_txt_file(uploaded_file):
                 file_container = st.expander("Your TXT file:")
                 uploaded_file.seek(0)
                 content = uploaded_file.read().decode("utf-8")
                 file_container.write(content)
-            
+
+            def show_json_file(uploaded_file):
+                file_container = st.expander('Your JSON file:')
+                uploaded_file.seek(0)
+                shows = pd.read_json(uploaded_file)
+                file_container.write(shows)
+
             def get_file_extension(uploaded_file):
                 return os.path.splitext(uploaded_file)[1].lower()
-            
+
             file_extension = get_file_extension(uploaded_file.name)
 
             # Show the contents of the file based on its extension
-            #if file_extension == ".csv" :
+            # if file_extension == ".csv" :
             #    show_csv_file(uploaded_file)
-            if file_extension== ".pdf" : 
+            if file_extension == ".pdf":
                 show_pdf_file(uploaded_file)
-            elif file_extension== ".txt" : 
+            elif file_extension == ".txt":
                 show_txt_file(uploaded_file)
+            elif file_extension == '.json':
+                show_json_file(uploaded_file)
 
         else:
             st.session_state["reset_chat"] = True
 
-        #print(uploaded_file)
+        # print(uploaded_file)
         return uploaded_file
 
     @staticmethod
@@ -96,10 +104,10 @@ class Utilities:
             vectors = embeds.getDocEmbeds(file, uploaded_file.name)
 
             # Create a Chatbot instance with the specified model and temperature
-            chatbot = Chatbot(model, temperature,vectors)
+            chatbot = Chatbot(model, temperature, vectors)
         st.session_state["ready"] = True
 
         return chatbot
 
 
-    
+

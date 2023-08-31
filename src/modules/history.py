@@ -2,8 +2,9 @@ import os
 import streamlit as st
 from streamlit_chat import message
 
+
 class ChatHistory:
-    
+
     def __init__(self):
         self.history = st.session_state.get("history", [])
         st.session_state["history"] = self.history
@@ -28,7 +29,7 @@ class ChatHistory:
 
     def reset(self, uploaded_file):
         st.session_state["history"] = []
-        
+
         self.initialize_user_history()
         self.initialize_assistant_history(uploaded_file)
         st.session_state["reset_chat"] = False
