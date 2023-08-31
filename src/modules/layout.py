@@ -1,8 +1,7 @@
 import streamlit as st
 
-
 class Layout:
-
+    
     def show_header(self, types_files):
         """
         Displays the header of the app
@@ -39,7 +38,7 @@ class Layout:
                 label_visibility="collapsed",
             )
             submit_button = st.form_submit_button(label="Send")
-
+            
             is_ready = submit_button and user_input
         return is_ready, user_input
-
+    
