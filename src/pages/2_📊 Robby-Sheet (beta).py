@@ -27,7 +27,7 @@ st.set_page_config(layout="wide", page_icon="💬", page_title="Robby | Chat-Bot
 
 layout, sidebar, utils = Layout(), Sidebar(), Utilities()
 
-layout.show_header("CSV, Excel")
+layout.show_header("CSV, Excel, JSON")
 
 user_api_key = utils.load_api_key()
 os.environ["OPENAI_API_KEY"] = user_api_key
@@ -39,7 +39,7 @@ if not user_api_key:
 else:
     st.session_state.setdefault("reset_chat", False)
 
-    uploaded_file = utils.handle_upload(["csv", "xlsx"])
+    uploaded_file = utils.handle_upload(["csv", "xlsx",'json'])
 
     if uploaded_file:
         sidebar.about()
@@ -47,6 +47,8 @@ else:
         uploaded_file_content = BytesIO(uploaded_file.getvalue())
         if uploaded_file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" or uploaded_file.type == "application/vnd.ms-excel":
             df = pd.read_excel(uploaded_file_content)
+        elif uploaded_file.type == 'application/json':
+            df = pd.read_json(uploaded_file_content)
         else:
             df = pd.read_csv(uploaded_file_content)
 

@@ -84,6 +84,7 @@ class Utilities:
             elif file_extension=='.json' :
                 show_json_file(uploaded_file)
 
+
         else:
             st.session_state["reset_chat"] = True
 

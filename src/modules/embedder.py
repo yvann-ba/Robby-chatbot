@@ -38,8 +38,8 @@ class Embedder:
             return file_extension
         
         text_splitter = RecursiveCharacterTextSplitter(
-                chunk_size = 2000,
-                chunk_overlap  = 100,
+                chunk_size = 4000,
+                chunk_overlap  = 300,
                 length_function = len,
             )
         
