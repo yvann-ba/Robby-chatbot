@@ -156,3 +156,5 @@ cython_debug/
 *.pkl
 *.csv
 
+**.DS_Store
+cache/

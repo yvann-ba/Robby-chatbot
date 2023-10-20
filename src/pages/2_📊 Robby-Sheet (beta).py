@@ -39,19 +39,33 @@ if not user_api_key:
 else:
     st.session_state.setdefault("reset_chat", False)
 
-    uploaded_file = utils.handle_upload(["csv", "xlsx"])
+    prod_uploaded_file = utils.handle_upload(["csv", "xlsx"], key="prod")
+    dev_uploaded_file = utils.handle_upload(["csv", "xlsx"], key="dev")
 
-    if uploaded_file:
+    if prod_uploaded_file and dev_uploaded_file:
         sidebar.about()
         
-        uploaded_file_content = BytesIO(uploaded_file.getvalue())
-        if uploaded_file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" or uploaded_file.type == "application/vnd.ms-excel":
-            df = pd.read_excel(uploaded_file_content)
+        # Prod
+        uploaded_file_content = BytesIO(prod_uploaded_file.getvalue())
+        if prod_uploaded_file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" or prod_uploaded_file.type == "application/vnd.ms-excel":
+            df_prod = pd.read_excel(uploaded_file_content)
         else:
-            df = pd.read_csv(uploaded_file_content)
+            # print("went here!")
+            df_prod = pd.read_csv(uploaded_file_content)
 
-        st.session_state.df = df
+        st.session_state.df_prod = df_prod
 
+        # Dev
+        uploaded_file_content = BytesIO(dev_uploaded_file.getvalue())
+        if dev_uploaded_file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" or dev_uploaded_file.type == "application/vnd.ms-excel":
+            df_dev = pd.read_excel(uploaded_file_content)
+        else:
+            # print("went here!")
+            df_dev = pd.read_csv(uploaded_file_content)
+
+        st.session_state.df_dev = df_dev
+
+        # Main Screen
         if "chat_history" not in st.session_state:
             st.session_state["chat_history"] = []
         csv_agent = PandasAgent()
@@ -66,12 +80,17 @@ else:
             if reset_chat_button:
                 st.session_state["chat_history"] = []
         if submitted_query:
-            result, captured_output = csv_agent.get_agent_response(df, query)
+            result, captured_output = csv_agent.get_agent_response([df_prod, df_dev], query)
             cleaned_thoughts = csv_agent.process_agent_thoughts(captured_output)
             csv_agent.display_agent_thoughts(cleaned_thoughts)
             csv_agent.update_chat_history(query, result)
             csv_agent.display_chat_history()
-        if st.session_state.df is not None:
-            st.subheader("Current dataframe:")
-            st.write(st.session_state.df)
+        if st.session_state.df_prod is not None:
+            st.subheader("Production Payroll Data:")
+            st.write(st.session_state.df_prod)
+        if st.session_state.df_dev is not None:
+            st.subheader("Test Payroll Data:")
+            st.write(st.session_state.df_dev)
+
+
 
