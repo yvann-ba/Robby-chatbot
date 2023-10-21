@@ -2,21 +2,18 @@ import streamlit as st
 
 
 #Config
-st.set_page_config(layout="wide", page_icon="💬", page_title="Bob | Compliance-Bot 🤖")
+st.set_page_config(layout="wide", page_icon="💬", page_title="Bob | Compliance-Bot 🤑")
 
 
 #Contact
 with st.sidebar.expander("📬 Contact"):
 
-    st.write("**GitHub:**",
-"[yvann-hub/Robby-chatbot](https://github.com/yvann-hub/Robby-chatbot)")
+    st.write("**GitHub:**","[ivan-pua/sxsw-hackathon](https://github.com/ivan-pua/sxsw-hackathon)")
 
-    st.write("**Medium:** "
-"[@yvann-hub](https://medium.com/@yvann-hub)")
+    st.write("**Blog:** ""[ivanpua.com](https://ivanpua.com/)")
 
-    st.write("**Twitter:** [@yvann_hub](https://twitter.com/yvann_hub)")
-    st.write("**Mail** : barbot.yvann@gmail.com")
-    st.write("**Created by Yvann**")
+    st.write("**Mail** : qieshang@gmail.com")
+    st.write("**Created by Ivan, credits to [Yvann](https://twitter.com/yvann_hub)**")
 
 
 #Title
@@ -41,11 +38,11 @@ st.markdown("---")
 
 
 #Robby's Pages
-st.subheader("🚀 What are solving?")
+st.subheader("🚀 What Are We Solving?")
 st.write("""
 - **Problem**: Large enterprises like 7-Eleven have been fined millions of dollars for underpaying their employees, a practice also known as wage theft. This not only leads to significant financial losses but also stains their reputation.
-- **How it works**: Bob, powered by Langchain, uses OpenAI's GPT-3 model to chat on tabular data (CSV). It processes the entire file for precise information retrieval. The entire application is built using Streamlit.
-- **Features**: Bob supports employee payroll data in CSV.
+- **How it works**: Bob, powered by Langchain, uses OpenAI's GPT-3 model to chat on tabular data (CSV). It extracts the most up-to-date legislation from NSW Fairwork website to check for compliance. The entire application is built using Streamlit.
+- **Features**: Bob supports CSV format as employee payroll dataset.
 """)
 st.markdown("---")
 

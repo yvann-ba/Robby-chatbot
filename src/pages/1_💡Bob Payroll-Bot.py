@@ -28,7 +28,7 @@ Layout = layout_module.Layout
 Utilities = utils_module.Utilities
 Sidebar = sidebar_module.Sidebar
 
-st.set_page_config(layout="wide", page_icon="💬", page_title="Bob | Chat-Bot 🤖")
+st.set_page_config(layout="wide", page_icon="💬", page_title="Bob | Payroll-Bot 🤑")
 
 # Instantiate the main components
 layout, sidebar, utils = Layout(), Sidebar(), Utilities()
@@ -51,9 +51,9 @@ else:
         prod_file_content = BytesIO(prod_uploaded_file.getvalue())
         dev_file_content = BytesIO(dev_uploaded_file.getvalue())
 
-        df_prod = pd.read_csv(prod_file_content).to_json(orient='records')
+        df_prod = pd.read_csv(prod_file_content).to_csv(index=False)
 
-        df_dev = pd.read_csv(dev_file_content).to_json(orient='records')
+        df_dev = pd.read_csv(dev_file_content).to_csv(index=False)
 
         # Configure the sidebar
         sidebar.show_options()
