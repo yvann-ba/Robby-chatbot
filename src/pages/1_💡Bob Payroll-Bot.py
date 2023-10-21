@@ -51,9 +51,9 @@ else:
         prod_file_content = BytesIO(prod_uploaded_file.getvalue())
         dev_file_content = BytesIO(dev_uploaded_file.getvalue())
 
-        df_prod = pd.read_csv(prod_file_content).to_csv(index=False)
+        df_prod = pd.read_csv(prod_file_content).to_csv(index=True)
 
-        df_dev = pd.read_csv(dev_file_content).to_csv(index=False)
+        df_dev = pd.read_csv(dev_file_content).to_csv(index=True)
 
         # Configure the sidebar
         sidebar.show_options()
