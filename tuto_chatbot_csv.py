@@ -8,32 +8,43 @@ from langchain.chains import ConversationalRetrievalChain
 from langchain.document_loaders.csv_loader import CSVLoader
 from langchain.vectorstores import FAISS
 import tempfile
-
+import pandas as pd
 
 user_api_key = st.sidebar.text_input(
     label="#### Your OpenAI API key 👇",
     placeholder="Paste your openAI API key, sk-",
     type="password")
 
-uploaded_file = st.sidebar.file_uploader("upload", type="csv")
+prod_uploaded_file = st.sidebar.file_uploader("upload", type="csv", key="prod")
 
-if uploaded_file :
+df_prod = pd.read_csv(prod_uploaded_file)
+
+dev_uploaded_file = st.sidebar.file_uploader("upload", type="csv", key="dev")
+
+df_dev = pd.read_csv(dev_uploaded_file)
+
+print(df_prod.to_json())
+
+if prod_uploaded_file :
     with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
-        tmp_file.write(uploaded_file.getvalue())
+        tmp_file.write(prod_uploaded_file.getvalue())
         tmp_file_path = tmp_file.name
+
 
     loader = CSVLoader(file_path=tmp_file_path, encoding="utf-8")
     data = loader.load()
 
-    embeddings = OpenAIEmbeddings()
+    embeddings = OpenAIEmbeddings(openai_api_key=user_api_key, )
     vectors = FAISS.from_documents(data, embeddings)
 
-    chain = ConversationalRetrievalChain.from_llm(llm = ChatOpenAI(temperature=0.0,model_name='gpt-3.5-turbo', openai_api_key=user_api_key),
+    chain = ConversationalRetrievalChain.from_llm(llm = ChatOpenAI(temperature=0.0,model_name='gpt-3.5-turbo-16k', openai_api_key=user_api_key),
                                                                       retriever=vectors.as_retriever())
 
     def conversational_chat(query):
         
-        result = chain({"question": query, "chat_history": st.session_state['history']})
+        result = chain(
+            {"question": query, "chat_history": st.session_state['history']}
+            )
         st.session_state['history'].append((query, result["answer"]))
         
         return result["answer"]
@@ -42,7 +53,7 @@ if uploaded_file :
         st.session_state['history'] = []
 
     if 'generated' not in st.session_state:
-        st.session_state['generated'] = ["Hello ! Ask me anything about " + uploaded_file.name + " 🤗"]
+        st.session_state['generated'] = ["Hello! Ask me anything about " + uploaded_file.name + " 🤗"]
 
     if 'past' not in st.session_state:
         st.session_state['past'] = ["Hey ! 👋"]

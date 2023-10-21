@@ -2,7 +2,7 @@ import streamlit as st
 
 class Sidebar:
 
-    MODEL_OPTIONS = ["gpt-3.5-turbo", "gpt-4"]
+    MODEL_OPTIONS = ["gpt-3.5-turbo-16k", "gpt-4", "gpt-4-32k", ]
     TEMPERATURE_MIN_VALUE = 0.0
     TEMPERATURE_MAX_VALUE = 1.0
     TEMPERATURE_DEFAULT_VALUE = 0.0
@@ -12,7 +12,7 @@ class Sidebar:
     def about():
         about = st.sidebar.expander("🧠 About Robby ")
         sections = [
-            "#### Robby is an AI chatbot with a conversational memory, designed to allow users to discuss their data in a more intuitive way. 📄",
+            "#### Bob is an AI chatbot with a conversational memory, designed to allow users to discuss their data in a more intuitive way. 📄",
             "#### It uses large language models to provide users with natural language interactions about user data content. 🌐",
             "#### Powered by [Langchain](https://github.com/hwchase17/langchain), [OpenAI](https://platform.openai.com/docs/models/gpt-3-5) and [Streamlit](https://github.com/streamlit/streamlit) ⚡",
             "#### Source code: [yvann-hub/Robby-chatbot](https://github.com/yvann-hub/Robby-chatbot)",
@@ -41,7 +41,7 @@ class Sidebar:
         st.session_state["temperature"] = temperature
         
     def show_options(self):
-        with st.sidebar.expander("🛠️ Robby's Tools", expanded=False):
+        with st.sidebar.expander("🛠️ Bob's Tools", expanded=False):
 
             self.reset_chat_button()
             self.model_selector()

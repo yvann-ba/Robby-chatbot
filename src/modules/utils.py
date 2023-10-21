@@ -5,7 +5,10 @@ import pdfplumber
 
 from modules.chatbot import Chatbot
 from modules.embedder import Embedder
-
+from langchain.vectorstores import FAISS
+from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain.document_loaders import TextLoader
+from langchain.document_transformers import BeautifulSoupTransformer
 class Utilities:
 
     @staticmethod
@@ -53,8 +56,13 @@ class Utilities:
             )
         if uploaded_file is not None:
 
-            def show_csv_file(uploaded_file):
-                file_container = st.expander("Your CSV file :")
+            def show_csv_file(uploaded_file, key):
+                data_type = ""
+                if key == 'prod':
+                    data_type = 'Production'
+                else:
+                    data_type = 'Development'
+                file_container = st.expander(f"{data_type} Payroll:")
                 uploaded_file.seek(0)
                 shows = pd.read_csv(uploaded_file)
                 file_container.write(shows)
@@ -79,8 +87,8 @@ class Utilities:
             file_extension = get_file_extension(uploaded_file.name)
 
             # Show the contents of the file based on its extension
-            #if file_extension == ".csv" :
-            #    show_csv_file(uploaded_file)
+            if file_extension == ".csv" :
+               show_csv_file(uploaded_file, key)
             if file_extension== ".pdf" : 
                 show_pdf_file(uploaded_file)
             elif file_extension== ".txt" : 
@@ -93,20 +101,23 @@ class Utilities:
         return uploaded_file
 
     @staticmethod
-    def setup_chatbot(uploaded_file, model, temperature):
+    def setup_chatbot(uploaded_file, model, temperature, df_dev, df_prod):
         """
         Sets up the chatbot with the uploaded file, model, and temperature
         """
         embeds = Embedder()
 
         with st.spinner("Processing..."):
-            uploaded_file.seek(0)
-            file = uploaded_file.read()
+            
             # Get the document embeddings for the uploaded file
-            vectors = embeds.getDocEmbeds(file, uploaded_file.name)
+            # Load HTML
+            loader = TextLoader("./test.txt")
+            fairwork_data = loader.load()
 
+            embeddings = OpenAIEmbeddings()
+            vectors = FAISS.from_documents(fairwork_data, embeddings)
             # Create a Chatbot instance with the specified model and temperature
-            chatbot = Chatbot(model, temperature,vectors)
+            chatbot = Chatbot(model, temperature, vectors, df_dev, df_prod)
         st.session_state["ready"] = True
 
         return chatbot

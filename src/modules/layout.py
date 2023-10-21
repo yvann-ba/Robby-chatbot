@@ -8,7 +8,7 @@ class Layout:
         """
         st.markdown(
             f"""
-            <h1 style='text-align: center;'> Ask Robby about your {types_files} files ! 😁</h1>
+            <h1 style='text-align: center;'> Payroll Compliance, Made Easy! 😁</h1>
             """,
             unsafe_allow_html=True,
         )

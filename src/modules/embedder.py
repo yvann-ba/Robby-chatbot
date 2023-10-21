@@ -41,11 +41,16 @@ class Embedder:
             )
         
         file_extension = get_file_extension(original_filename)
+        print(file_extension)
 
         if file_extension == ".csv":
+            print("hello")
             loader = CSVLoader(file_path=tmp_file_path, encoding="utf-8",csv_args={
-                'delimiter': ',',})
+                'delimiter': ','
+                # , 'newline': '\n'
+                })
             data = loader.load()
+            print(data)
 
         elif file_extension == ".pdf":
             loader = PyPDFLoader(file_path=tmp_file_path)  

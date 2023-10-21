@@ -9,28 +9,28 @@ class ChatHistory:
         st.session_state["history"] = self.history
 
     def default_greeting(self):
-        return "Hey Robby ! 👋"
+        return "Hey Bob! 👋"
 
-    def default_prompt(self, topic):
-        return f"Hello ! Ask me anything about {topic} 🤗"
+    def default_prompt(self):
+        return f"Hello! Ask me anything about your payroll data 🤗"
 
     def initialize_user_history(self):
         st.session_state["user"] = [self.default_greeting()]
 
-    def initialize_assistant_history(self, uploaded_file):
-        st.session_state["assistant"] = [self.default_prompt(uploaded_file.name)]
+    def initialize_assistant_history(self,):
+        st.session_state["assistant"] = [self.default_prompt()]
 
-    def initialize(self, uploaded_file):
+    def initialize(self):
         if "assistant" not in st.session_state:
-            self.initialize_assistant_history(uploaded_file)
+            self.initialize_assistant_history()
         if "user" not in st.session_state:
             self.initialize_user_history()
 
-    def reset(self, uploaded_file):
+    def reset(self):
         st.session_state["history"] = []
         
         self.initialize_user_history()
-        self.initialize_assistant_history(uploaded_file)
+        self.initialize_assistant_history()
         st.session_state["reset_chat"] = False
 
     def append(self, mode, message):

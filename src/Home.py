@@ -2,7 +2,7 @@ import streamlit as st
 
 
 #Config
-st.set_page_config(layout="wide", page_icon="💬", page_title="Robby | Chat-Bot 🤖")
+st.set_page_config(layout="wide", page_icon="💬", page_title="Bob | Compliance-Bot 🤖")
 
 
 #Contact
@@ -22,7 +22,7 @@ with st.sidebar.expander("📬 Contact"):
 #Title
 st.markdown(
     """
-    <h2 style='text-align: center;'>Robby, your data-aware assistant 🤖</h1>
+    <h2 style='text-align: center;'>Bob, Your Payroll Compliance Buddy 🤑</h1>
     """,
     unsafe_allow_html=True,)
 
@@ -32,21 +32,20 @@ st.markdown("---")
 #Description
 st.markdown(
     """ 
-    <h5 style='text-align:center;'>I'm Robby, an intelligent chatbot created by combining 
-    the strengths of Langchain and Streamlit. I use large language models to provide
-    context-sensitive interactions. My goal is to help you better understand your data.
-    I support PDF, TXT, CSV, Youtube transcript 🧠</h5>
+    <h5 style='text-align:center;'>Meet Bob, your intelligent payroll compliance assistant. 
+    Bob's mission is to ensure payroll compliance by comparing actual employee pay against 
+    predicted pay. Any discrepancies are cross-checked with the NSW Fairwork legislation. 🧠</h5>
     """,
     unsafe_allow_html=True)
 st.markdown("---")
 
 
 #Robby's Pages
-st.subheader("🚀 Robby's Pages")
+st.subheader("🚀 What are solving?")
 st.write("""
-- **Robby-Chat**: General Chat on data (PDF, TXT,CSV) with a [vectorstore](https://github.com/facebookresearch/faiss) (index useful parts(max 4) for respond to the user) | works with [ConversationalRetrievalChain](https://python.langchain.com/en/latest/modules/chains/index_examples/chat_vector_db.html)
-- **Robby-Sheet** (beta): Chat on tabular data (CSV) | for precise information | process the whole file | works with [CSV_Agent](https://python.langchain.com/en/latest/modules/agents/toolkits/examples/csv.html) + [PandasAI](https://github.com/gventuri/pandas-ai) for data manipulation and graph creation
-- **Robby-Youtube**: Summarize YouTube videos with [summarize-chain](https://python.langchain.com/en/latest/modules/chains/index_examples/summarize.html)
+- **Problem**: Large enterprises like 7-Eleven have been fined millions of dollars for underpaying their employees, a practice also known as wage theft. This not only leads to significant financial losses but also stains their reputation.
+- **How it works**: Bob, powered by Langchain, uses OpenAI's GPT-3 model to chat on tabular data (CSV). It processes the entire file for precise information retrieval. The entire application is built using Streamlit.
+- **Features**: Bob supports employee payroll data in CSV.
 """)
 st.markdown("---")
 
@@ -54,7 +53,7 @@ st.markdown("---")
 #Contributing
 st.markdown("### 🎯 Contributing")
 st.markdown("""
-**Robby is under regular development. Feel free to contribute and help me make it even more data-aware!**
+**Bob is under regular development. Feel free to contribute and help me make it even more data-aware!**
 """, unsafe_allow_html=True)
 
 
