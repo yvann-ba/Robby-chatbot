@@ -51,11 +51,23 @@ class Utilities:
 
             def show_pdf_file(uploaded_file):
                 file_container = st.expander("Your PDF file :")
-                with pdfplumber.open(uploaded_file) as pdf:
-                    pdf_text = ""
-                    for page in pdf.pages:
-                        pdf_text += page.extract_text() + "\n\n"
-                file_container.write(pdf_text)
+                try:
+                    with pdfplumber.open(uploaded_file) as pdf:
+                        pdf_text = ""
+                        for page in pdf.pages:
+                            try:
+                                text = page.extract_text()
+                                if text:
+                                    pdf_text += text + "\n\n"
+                            except Exception:
+                                # Skip pages that fail to extract
+                                continue
+                    if pdf_text.strip():
+                        file_container.write(pdf_text)
+                    else:
+                        file_container.write("Could not extract text from PDF (may be scanned/image-based).")
+                except Exception as e:
+                    file_container.write(f"Could not preview PDF: {str(e)}")
             
             def show_txt_file(uploaded_file):
                 file_container = st.expander("Your TXT file:")

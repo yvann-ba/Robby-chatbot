@@ -72,9 +72,7 @@ else:
         
         if submitted_query and query:
             with st.spinner("Analyzing data..."):
-                result, captured_output = csv_agent.get_agent_response(df, query)
-                cleaned_thoughts = csv_agent.process_agent_thoughts(captured_output)
-                csv_agent.display_agent_thoughts(cleaned_thoughts)
+                result, _ = csv_agent.get_agent_response(df, query)
                 csv_agent.update_chat_history(query, result)
         
         csv_agent.display_chat_history()

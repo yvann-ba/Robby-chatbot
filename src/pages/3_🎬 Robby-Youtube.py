@@ -32,11 +32,11 @@ else:
 
     def get_youtube_id(url):
         video_id = None
-        match = re.search(r"(?<=v=)[^&#]+", url)
+        match = re.search(r"(?<=v=)[^&#?]+", url)
         if match:
             video_id = match.group()
         else: 
-            match = re.search(r"(?<=youtu.be/)[^&#]+", url)
+            match = re.search(r"(?<=youtu.be/)[^&#?]+", url)
             if match:
                 video_id = match.group()
         return video_id
@@ -45,14 +45,25 @@ else:
         """
         Get transcript using youtube-transcript-api v1.0+ API
         """
+        from youtube_transcript_api._errors import TranscriptsDisabled, NoTranscriptFound, VideoUnavailable
+        
         # Create instance of YouTubeTranscriptApi
         ytt_api = YouTubeTranscriptApi()
         
-        # Fetch transcript - try different languages
-        transcript = ytt_api.fetch(
-            video_id, 
-            languages=['en', 'fr', 'es', 'de', 'it', 'pt', 'ru', 'ja', 'ko', 'zh-Hans']
-        )
+        try:
+            # Fetch transcript - try different languages
+            transcript = ytt_api.fetch(
+                video_id, 
+                languages=['en', 'fr', 'es', 'de', 'it', 'pt', 'ru', 'ja', 'ko', 'zh-Hans']
+            )
+        except (TranscriptsDisabled, NoTranscriptFound):
+            # Try auto-generated captions
+            try:
+                transcript = ytt_api.fetch(video_id)  # Try any available transcript
+            except Exception as e:
+                raise ValueError(f"No transcript available for this video. The video may have disabled subtitles or no captions exist.") from e
+        except VideoUnavailable:
+            raise ValueError("This video is unavailable or private.")
         
         # Build transcript text from snippets
         transcript_text = ""
