@@ -155,4 +155,4 @@ cython_debug/
 
 *.pkl
 *.csv
-
+embeddings/*/
