@@ -1,9 +1,13 @@
+#### `pleaseee add a star⭐️ to this repo if you like it, so I can keep improving it for free ((:`
+---
 # Robby-chatbot 🤖
 
-[![Twitter Follow](https://img.shields.io/twitter/follow/yvann_hub?style=social)](https://twitter.com/yvann_hub)
 
 
 ### An AI chatbot featuring conversational memory, designed to enable users to discuss their CSV, PDF, TXT data and YouTube videos in a more intuitive manner. 🚀
+
+#### *I'm currently working on making AI useful for geospatial -> building [TerraLab](https://www.terra-lab.ai/) with my dad and best friend, come take a look hehe*
+
 ![Robby](robby-pic.png)
 Robby the Robot from [Forbidden Planet](https://youtu.be/bflfQN_YsTM)
 
