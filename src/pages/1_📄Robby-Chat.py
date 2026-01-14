@@ -51,10 +51,10 @@ else:
         # Initialize chat history
         history = ChatHistory()
         try:
+            # Setup chatbot - do not store in session_state to avoid pickle errors
             chatbot = utils.setup_chatbot(
                 uploaded_file, st.session_state["model"], st.session_state["temperature"]
             )
-            st.session_state["chatbot"] = chatbot
 
             if st.session_state["ready"]:
                 # Create containers for chat responses and user prompts
@@ -78,7 +78,8 @@ else:
                         old_stdout = sys.stdout
                         sys.stdout = captured_output = StringIO()
 
-                        output = st.session_state["chatbot"].conversational_chat(user_input)
+                        # Use chatbot directly instead of from session_state
+                        output = chatbot.conversational_chat(user_input)
 
                         sys.stdout = old_stdout
 
@@ -96,5 +97,3 @@ else:
                 history.generate_messages(response_container)
         except Exception as e:
             st.error(f"Error: {str(e)}")
-
-

@@ -28,7 +28,7 @@ class Layout:
 
     def prompt_form(self):
         """
-        Displays the prompt form
+        Displays the prompt form using native Streamlit chat input
         """
         with st.form(key="my_form", clear_on_submit=True):
             user_input = st.text_area(
@@ -41,4 +41,3 @@ class Layout:
             
             is_ready = submit_button and user_input
         return is_ready, user_input
-    

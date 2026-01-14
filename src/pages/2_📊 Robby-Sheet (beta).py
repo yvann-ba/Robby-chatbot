@@ -30,13 +30,12 @@ layout, sidebar, utils = Layout(), Sidebar(), Utilities()
 layout.show_header("CSV, Excel")
 
 user_api_key = utils.load_api_key()
-os.environ["OPENAI_API_KEY"] = user_api_key
-
 
 if not user_api_key:
     layout.show_api_key_missing()
 
 else:
+    os.environ["OPENAI_API_KEY"] = user_api_key
     st.session_state.setdefault("reset_chat", False)
 
     uploaded_file = utils.handle_upload(["csv", "xlsx"])
@@ -54,24 +53,32 @@ else:
 
         if "chat_history" not in st.session_state:
             st.session_state["chat_history"] = []
+        
+        # Initialize PandasAI agent (v3)
         csv_agent = PandasAgent()
 
         with st.form(key="query"):
 
-            query = st.text_input("Ask [PandasAI](https://github.com/gventuri/pandas-ai) (look the pandas-AI read-me for how use it)", value="", type="default", 
-                placeholder="e-g : How many rows ? "
-                )
+            query = st.text_input(
+                "Ask [PandasAI](https://github.com/sinaptik-ai/pandas-ai) about your data",
+                value="",
+                type="default", 
+                placeholder="e.g.: How many rows? What's the average of column X?"
+            )
             submitted_query = st.form_submit_button("Submit")
             reset_chat_button = st.form_submit_button("Reset Chat")
             if reset_chat_button:
                 st.session_state["chat_history"] = []
-        if submitted_query:
-            result, captured_output = csv_agent.get_agent_response(df, query)
-            cleaned_thoughts = csv_agent.process_agent_thoughts(captured_output)
-            csv_agent.display_agent_thoughts(cleaned_thoughts)
-            csv_agent.update_chat_history(query, result)
-            csv_agent.display_chat_history()
+        
+        if submitted_query and query:
+            with st.spinner("Analyzing data..."):
+                result, captured_output = csv_agent.get_agent_response(df, query)
+                cleaned_thoughts = csv_agent.process_agent_thoughts(captured_output)
+                csv_agent.display_agent_thoughts(cleaned_thoughts)
+                csv_agent.update_chat_history(query, result)
+        
+        csv_agent.display_chat_history()
+        
         if st.session_state.df is not None:
             st.subheader("Current dataframe:")
-            st.write(st.session_state.df)
-
+            st.dataframe(st.session_state.df, use_container_width=True)

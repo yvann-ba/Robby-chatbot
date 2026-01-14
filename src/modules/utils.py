@@ -85,21 +85,21 @@ class Utilities:
     @staticmethod
     def setup_chatbot(uploaded_file, model, temperature):
         """
-        Sets up the chatbot with the uploaded file, model, and temperature
+        Sets up the chatbot with the uploaded file, model, and temperature.
+        Uses file-based caching with FAISS native save/load to avoid pickle issues.
         """
         embeds = Embedder()
 
-        with st.spinner("Processing..."):
+        with st.spinner("Processing document..."):
             uploaded_file.seek(0)
-            file = uploaded_file.read()
-            # Get the document embeddings for the uploaded file
-            vectors = embeds.getDocEmbeds(file, uploaded_file.name)
+            file_content = uploaded_file.read()
+            file_name = uploaded_file.name
+            
+            # Get vectors - embedder handles caching via FAISS save_local
+            vectors = embeds.getDocEmbeds(file_content, file_name)
 
-            # Create a Chatbot instance with the specified model and temperature
-            chatbot = Chatbot(model, temperature,vectors)
+            # Create a Chatbot instance fresh each time
+            chatbot = Chatbot(model, temperature, vectors)
+        
         st.session_state["ready"] = True
-
         return chatbot
-
-
-    

@@ -5,12 +5,8 @@ from modules.layout import Layout
 from modules.utils import Utilities
 from modules.sidebar import Sidebar
 from youtube_transcript_api import YouTubeTranscriptApi
-from langchain.chains.summarize import load_summarize_chain
-from langchain.chains import AnalyzeDocumentChain
-from youtube_transcript_api import YouTubeTranscriptApi
-from langchain.llms import OpenAI
-import os
-from langchain.text_splitter import CharacterTextSplitter
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import PromptTemplate
 
 st.set_page_config(layout="wide", page_icon="💬", page_title="Robby | Chat-Bot 🤖")
 
@@ -34,38 +30,80 @@ if not user_api_key:
 else:
     os.environ["OPENAI_API_KEY"] = user_api_key
 
-    script_docs = []
-
     def get_youtube_id(url):
         video_id = None
         match = re.search(r"(?<=v=)[^&#]+", url)
-        if match :
+        if match:
             video_id = match.group()
-        else : 
+        else: 
             match = re.search(r"(?<=youtu.be/)[^&#]+", url)
-            if match :
+            if match:
                 video_id = match.group()
         return video_id
 
-    video_url = st.text_input(placeholder="Enter Youtube Video URL", label_visibility="hidden", label =" ")
-    if video_url :
+    def get_transcript(video_id):
+        """
+        Get transcript using youtube-transcript-api v1.0+ API
+        """
+        # Create instance of YouTubeTranscriptApi
+        ytt_api = YouTubeTranscriptApi()
+        
+        # Fetch transcript - try different languages
+        transcript = ytt_api.fetch(
+            video_id, 
+            languages=['en', 'fr', 'es', 'de', 'it', 'pt', 'ru', 'ja', 'ko', 'zh-Hans']
+        )
+        
+        # Build transcript text from snippets
+        transcript_text = ""
+        for snippet in transcript:
+            transcript_text += snippet.text + " "
+        
+        return transcript_text.strip()
+
+    video_url = st.text_input(placeholder="Enter Youtube Video URL", label_visibility="hidden", label=" ")
+    if video_url:
         video_id = get_youtube_id(video_url)
 
-        if video_id != "":
-            t = YouTubeTranscriptApi.get_transcript(video_id, languages=('en','fr','es', 'zh-cn', 'hi', 'ar', 'bn', 'ru', 'pt', 'sw' ))
-            finalString = ""
-            for item in t:
-                text = item['text']
-                finalString += text + " "
+        if video_id:
+            try:
+                with st.spinner("Fetching transcript and summarizing..."):
+                    # Get transcript as string
+                    transcript_text = get_transcript(video_id)
+                    
+                    # Create a simple summarization using LangChain
+                    llm = ChatOpenAI(temperature=0, model="gpt-4o-mini")
+                    
+                    prompt = PromptTemplate(
+                        input_variables=["text"],
+                        template="""Please provide a comprehensive summary of the following YouTube video transcript. 
+                        
+Include:
+- Main topics discussed
+- Key points and takeaways
+- Any important details or conclusions
 
-            text_splitter = CharacterTextSplitter()
-            chunks = text_splitter.split_text(finalString)
+Transcript:
+{text}
 
-            summary_chain = load_summarize_chain(OpenAI(temperature=0),
-                                            chain_type="map_reduce",verbose=True)
-            
-            summarize_document_chain = AnalyzeDocumentChain(combine_docs_chain=summary_chain)
-
-            answer = summarize_document_chain.run(chunks)
-
-            st.subheader(answer)
+Summary:"""
+                    )
+                    
+                    # For longer transcripts, chunk it
+                    max_chars = 15000
+                    if len(transcript_text) > max_chars:
+                        transcript_text = transcript_text[:max_chars] + "..."
+                    
+                    chain = prompt | llm
+                    response = chain.invoke({"text": transcript_text})
+                    
+                    st.subheader("Summary")
+                    st.write(response.content)
+                    
+                    with st.expander("View Transcript"):
+                        st.write(transcript_text)
+                        
+            except Exception as e:
+                st.error(f"Error processing video: {str(e)}")
+        else:
+            st.error("Invalid YouTube URL. Please enter a valid URL.")
