@@ -1,5 +1,3 @@
-#### `pleaseee add a star⭐️ to this repo if you like it, so I can keep improving it for free ((:`
----
 # Robby-chatbot 🤖
 
 
