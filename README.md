@@ -21,6 +21,7 @@ Robby the Robot from [Forbidden Planet](https://youtu.be/bflfQN_YsTM)
 
 - **[LangChain](https://github.com/langchain-ai/langchain)** - LLM orchestration framework
 - **[OpenAI](https://platform.openai.com/docs/models)** - GPT-4o, GPT-4o-mini, GPT-4-turbo, GPT-3.5-turbo
+- **[MiniMax](https://www.minimax.io/)** - MiniMax-M2.7, MiniMax-M2.7-highspeed (204K context)
 - **[PandasAI](https://github.com/sinaptik-ai/pandas-ai)** - Natural language data analysis
 - **[Streamlit](https://github.com/streamlit/streamlit)** - Web application framework
 - **[FAISS](https://github.com/facebookresearch/faiss)** - Vector similarity search
@@ -32,7 +33,7 @@ Follow these steps to set up and run the service locally:
 ### Prerequisites
 - Python 3.10 or higher
 - Git
-- OpenAI API key
+- OpenAI API key and/or MiniMax API key
 
 ### Installation
 
@@ -71,26 +72,38 @@ streamlit run src/Home.py
 
 ### Environment Variables (Optional)
 
-You can set your OpenAI API key as an environment variable instead of entering it in the UI:
+You can set your API keys as environment variables instead of entering them in the UI:
 
 ```bash
-export OPENAI_API_KEY="your-api-key-here"
+# OpenAI
+export OPENAI_API_KEY="your-openai-api-key-here"
+
+# MiniMax
+export MINIMAX_API_KEY="your-minimax-api-key-here"
 ```
 
 Or create a `.env` file in the project root:
 
 ```
-OPENAI_API_KEY=your-api-key-here
+OPENAI_API_KEY=your-openai-api-key-here
+MINIMAX_API_KEY=your-minimax-api-key-here
 ```
 
 #### That's it! The service is now up and running locally. 🤗
 
 ## Models Available 🤖
 
+### OpenAI
 - **GPT-4o-mini** - Fast and cost-effective (default)
 - **GPT-4o** - Most capable model
 - **GPT-4-turbo** - Balanced performance
 - **GPT-3.5-turbo** - Legacy model
+
+### MiniMax
+- **MiniMax-M2.7** - Latest flagship model with 204K context window
+- **MiniMax-M2.7-highspeed** - High-speed variant with 204K context window
+
+Select your preferred provider and model from the sidebar in the app.
 
 ## Contributing 🙌
 If you want to contribute to this project, please open an issue, submit a pull request or contact me at barbot.yvann@gmail.com (:

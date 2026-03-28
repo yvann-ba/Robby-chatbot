@@ -28,7 +28,7 @@ if not user_api_key:
     layout.show_api_key_missing()
 
 else:
-    os.environ["OPENAI_API_KEY"] = user_api_key
+    utils.set_api_key_env(user_api_key)
 
     def get_youtube_id(url):
         video_id = None
@@ -82,8 +82,19 @@ else:
                     # Get transcript as string
                     transcript_text = get_transcript(video_id)
                     
-                    # Create a simple summarization using LangChain
-                    llm = ChatOpenAI(temperature=0, model="gpt-4o-mini")
+                    # Create a summarization LLM using the selected provider
+                    provider = st.session_state.get("provider", "OpenAI")
+                    model = st.session_state.get("model", "gpt-4o-mini")
+
+                    if provider == "MiniMax":
+                        llm = ChatOpenAI(
+                            temperature=0.01,
+                            model=model,
+                            openai_api_key=os.environ.get("MINIMAX_API_KEY", ""),
+                            openai_api_base="https://api.minimax.io/v1",
+                        )
+                    else:
+                        llm = ChatOpenAI(temperature=0, model=model)
                     
                     prompt = PromptTemplate(
                         input_variables=["text"],
