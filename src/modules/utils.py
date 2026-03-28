@@ -6,32 +6,62 @@ import pdfplumber
 from modules.chatbot import Chatbot
 from modules.embedder import Embedder
 
+# MiniMax API base URL (OpenAI-compatible)
+MINIMAX_BASE_URL = "https://api.minimax.io/v1"
+
 class Utilities:
 
     @staticmethod
     def load_api_key():
         """
-        Loads the OpenAI API key from the .env file or 
-        from the user's input and returns it
+        Loads the API key for the selected provider from the .env file or
+        from the user's input and returns it.
+        Supports both OpenAI and MiniMax providers.
         """
-        if not hasattr(st.session_state, "api_key"):
-            st.session_state.api_key = None
-        #you can define your API key in .env directly
-        if os.path.exists(".env") and os.environ.get("OPENAI_API_KEY") is not None:
-            user_api_key = os.environ["OPENAI_API_KEY"]
-            st.sidebar.success("API key loaded from .env", icon="🚀")
+        provider = st.session_state.get("provider", "OpenAI")
+
+        if provider == "MiniMax":
+            env_var = "MINIMAX_API_KEY"
+            label = "#### Your MiniMax API key 👇"
+            placeholder = "eyJ..."
+            session_key = "minimax_api_key"
         else:
-            if st.session_state.api_key is not None:
-                user_api_key = st.session_state.api_key
-                st.sidebar.success("API key loaded from previous input", icon="🚀")
+            env_var = "OPENAI_API_KEY"
+            label = "#### Your OpenAI API key 👇"
+            placeholder = "sk-..."
+            session_key = "api_key"
+
+        if not hasattr(st.session_state, session_key):
+            setattr(st.session_state, session_key, None)
+
+        if os.path.exists(".env") and os.environ.get(env_var) is not None:
+            user_api_key = os.environ[env_var]
+            st.sidebar.success(f"{provider} API key loaded from .env", icon="🚀")
+        else:
+            stored_key = getattr(st.session_state, session_key, None)
+            if stored_key is not None:
+                user_api_key = stored_key
+                st.sidebar.success(f"{provider} API key loaded from previous input", icon="🚀")
             else:
                 user_api_key = st.sidebar.text_input(
-                    label="#### Your OpenAI API key 👇", placeholder="sk-...", type="password"
+                    label=label, placeholder=placeholder, type="password"
                 )
                 if user_api_key:
-                    st.session_state.api_key = user_api_key
+                    setattr(st.session_state, session_key, user_api_key)
 
         return user_api_key
+
+    @staticmethod
+    def set_api_key_env(user_api_key):
+        """
+        Sets the API key environment variable based on the selected provider.
+        For MiniMax, also sets OPENAI_API_KEY since embeddings still use OpenAI.
+        """
+        provider = st.session_state.get("provider", "OpenAI")
+        if provider == "MiniMax":
+            os.environ["MINIMAX_API_KEY"] = user_api_key
+        else:
+            os.environ["OPENAI_API_KEY"] = user_api_key
 
     
     @staticmethod
@@ -101,17 +131,18 @@ class Utilities:
         Uses file-based caching with FAISS native save/load to avoid pickle issues.
         """
         embeds = Embedder()
+        provider = st.session_state.get("provider", "OpenAI")
 
         with st.spinner("Processing document..."):
             uploaded_file.seek(0)
             file_content = uploaded_file.read()
             file_name = uploaded_file.name
-            
+
             # Get vectors - embedder handles caching via FAISS save_local
             vectors = embeds.getDocEmbeds(file_content, file_name)
 
             # Create a Chatbot instance fresh each time
-            chatbot = Chatbot(model, temperature, vectors)
-        
+            chatbot = Chatbot(model, temperature, vectors, provider=provider)
+
         st.session_state["ready"] = True
         return chatbot

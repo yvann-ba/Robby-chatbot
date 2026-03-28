@@ -11,9 +11,20 @@ import os
 class PandasAgent:
 
     def __init__(self):
-        # Configure PandasAI with OpenAI via LiteLLM
-        api_key = os.environ.get("OPENAI_API_KEY", "")
-        llm = LiteLLM(model="openai/gpt-4o-mini", api_key=api_key)
+        # Configure PandasAI with the selected provider via LiteLLM
+        provider = st.session_state.get("provider", "OpenAI")
+
+        if provider == "MiniMax":
+            api_key = os.environ.get("MINIMAX_API_KEY", "")
+            llm = LiteLLM(
+                model="openai/MiniMax-M2.7",
+                api_key=api_key,
+                api_base="https://api.minimax.io/v1",
+            )
+        else:
+            api_key = os.environ.get("OPENAI_API_KEY", "")
+            llm = LiteLLM(model="openai/gpt-4o-mini", api_key=api_key)
+
         pai.config.set({"llm": llm})
 
     @staticmethod

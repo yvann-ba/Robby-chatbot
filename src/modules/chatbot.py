@@ -1,15 +1,20 @@
+import os
 import streamlit as st
 from langchain_openai import ChatOpenAI
 from langchain_classic.chains import ConversationalRetrievalChain
 from langchain_core.prompts import PromptTemplate
 from langchain_community.callbacks import get_openai_callback
 
+# MiniMax API base URL (OpenAI-compatible)
+MINIMAX_BASE_URL = "https://api.minimax.io/v1"
+
 class Chatbot:
 
-    def __init__(self, model_name, temperature, vectors):
+    def __init__(self, model_name, temperature, vectors, provider="OpenAI"):
         self.model_name = model_name
         self.temperature = temperature
         self.vectors = vectors
+        self.provider = provider
 
     qa_template = """
         You are a helpful AI assistant named Robby. The user gives you a file its content is represented by the following pieces of context, use them to answer the question at the end.
@@ -25,11 +30,27 @@ class Chatbot:
 
     QA_PROMPT = PromptTemplate(template=qa_template, input_variables=["context", "question"])
 
+    def _create_llm(self):
+        """Create a ChatOpenAI instance for the selected provider."""
+        if self.provider == "MiniMax":
+            # MiniMax requires temperature > 0
+            temperature = max(self.temperature, 0.01)
+            return ChatOpenAI(
+                model_name=self.model_name,
+                temperature=temperature,
+                openai_api_key=os.environ.get("MINIMAX_API_KEY", ""),
+                openai_api_base=MINIMAX_BASE_URL,
+            )
+        return ChatOpenAI(
+            model_name=self.model_name,
+            temperature=self.temperature,
+        )
+
     def conversational_chat(self, query):
         """
         Start a conversational chat with a model via Langchain
         """
-        llm = ChatOpenAI(model_name=self.model_name, temperature=self.temperature)
+        llm = self._create_llm()
 
         retriever = self.vectors.as_retriever()
 

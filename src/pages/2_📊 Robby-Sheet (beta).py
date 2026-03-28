@@ -35,7 +35,7 @@ if not user_api_key:
     layout.show_api_key_missing()
 
 else:
-    os.environ["OPENAI_API_KEY"] = user_api_key
+    utils.set_api_key_env(user_api_key)
     st.session_state.setdefault("reset_chat", False)
 
     uploaded_file = utils.handle_upload(["csv", "xlsx"])
